@@ -6,15 +6,15 @@ paginate_path: page/:num
 gems: [jekyll-paginate]
 
 blog:
-    name: Johnny                                               # 博客名称
-    description: There is no royal road to learning.                                         # 博客描述
-    title: A little progress everyday.                                              # 网页标题
-    url: qiangxie.github.io                                                # 博客地址
+    name: Johnny                                        # 博客名称
+    description: There is no royal road to learning.    # 博客描述
+    title: A little progress everyday.                  # 网页标题
+    url: qiangxie.github.io                             # 博客地址
 author:
-    name: Xie Qiang                                               # 作者名称
-    email: happyxieqiang@qq.com                                              # 邮箱地址
-    weibo:                                               # 微博地址
-    github: https://github.com/QiangXie                                              # GitHub地址
+    name: Xie Qiang                                     # 作者名称
+    email: happyxieqiang@qq.com                         # 邮箱地址
+    weibo:                                              # 微博地址
+    github: https://github.com/QiangXie                 # GitHub地址
     logo: https://www.nasa.gov/sites/default/files/styles/full_width_feature/public/thumbnails/image/pia20486-1041.jpg 
     douban:
         name:                                            # 豆瓣地址名称
