@@ -6,16 +6,13 @@ paginate_path: page/:num
 gems: [jekyll-paginate]
 
 blog:
-    name:                                                # 博客名称
-    description:                                         # 博客描述
-    title:                                               # 网页标题
-    url:                                                 # 博客地址
-    duoshuo:                                             # 多说ID
-    tongji:                                              # 百度统计ID
-    qiniu:                                               # 七牛云地址
+    name: Xie Qiang                                               # 博客名称
+    description: my blog                                         # 博客描述
+    title: A little progress everyday.                                              # 网页标题
+    url: qiangxie.github.io                                                # 博客地址
 author:
-    name:                                                # 作者名称
-    email:                                               # 邮箱地址
+    name: Xie Qiang                                               # 作者名称
+    email: happyxieqiang@qq.com                                              # 邮箱地址
     weibo:                                               # 微博地址
     github:                                              # GitHub地址
     logo:                                                # logo地址
