@@ -6,8 +6,8 @@ paginate_path: page/:num
 gems: [jekyll-paginate]
 
 blog:
-    name: Xie Qiang                                               # 博客名称
-    description: my blog                                         # 博客描述
+    name: Johnny                                               # 博客名称
+    description: There is no royal road to learning.                                         # 博客描述
     title: A little progress everyday.                                              # 网页标题
     url: qiangxie.github.io                                                # 博客地址
 author:
