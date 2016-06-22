@@ -8,6 +8,8 @@ tags:
     - deep learning
     - caffe
 ---
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 solver是caffe中一个很重要的概念，简单来说solver通过不断 forward和backward计算梯度，用计算得到的梯度对模型进行优化，更新深度神经网络各层的参数，使得loss最小以使模型更好地拟合数据。
 
 1. solver的作用及分类
