@@ -12,6 +12,8 @@ tags:
 
 
 solver是caffe中一个很重要的概念，简单来说solver通过不断 forward和backward计算梯度，用计算得到的梯度对模型进行优化，更新深度神经网络各层的参数，使得loss最小以使模型更好地拟合数据。
+Here is an example MathJax inline rendering \\( 1/x^{2} \\), and here is a block rendering: 
+\\[ \frac{1}{n^{2}} \\]
 
 # solver的作用及分类 #
 
