@@ -12,8 +12,8 @@ baseurl: "/QiangXie.github.io"         # for example, '/blog' if your blog hoste
 
 # SNS settings
 RSS: false
-#weibo_username:     huxpro
-#zhihu_username:     huxpro
+weibo_username:     happyxieqiang
+zhihu_username:     xie-qiang-28-93
 github_username:    QiangXie 
 #twitter_username:  huxpro
 #facebook_username:  huxpro
@@ -40,7 +40,7 @@ gems: [jekyll-paginate]
 # replace redcarpet to kramdown,
 # although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
 # document: http://jekyllrb.com/docs/configuration/#kramdown
-markdown: kramdown 
+markdown: kramdown
 kramdown:
   input: GFM                            # use Github Flavored Markdown !important
 
@@ -84,17 +84,5 @@ friends: [
     {
         title: "Hux Blog",
         href: "http://huangxuan.me"
-    },{
-        title: "Foo",
-        href: "#"
-    },{
-        title: "Bar",
-        href: "#"
-    },{
-        title: "Example Friends",
-        href: "#"
-    },{
-        title: "It helps SEO",
-        href: "#"
     }
 ]
