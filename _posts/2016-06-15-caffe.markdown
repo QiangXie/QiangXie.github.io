@@ -4,7 +4,7 @@ title: "caffe 学习笔记 1"
 subtitle: "caffe 中的 SGD solver"
 author: "Johnny"
 date: 2016-06-15 19:04:09
-header-img: "img/sky.jpg"
+header-img: "img/bg-4.jpg"
 tags: 
     - deep learning
     - caffe

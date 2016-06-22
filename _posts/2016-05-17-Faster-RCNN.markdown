@@ -4,7 +4,7 @@ title: "用自己的数据训练Faster-RCNN"
 subtitle: "玩faster-rcnn手记"
 author: "Johnny"
 date: 2016-05-17 21:59:08
-header-img: "img/sky.jpg"
+header-img: "img/bg-3.jpg"
 tags: 
     - deep learning
     - 目标检测

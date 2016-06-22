@@ -4,7 +4,7 @@ title: "some linux tools"
 subtitle: "zsh tmux vim htop"
 author: "Johnny"
 date: 2016-05-09 16:10:08
-header-img: "img/sky.jpg"
+header-img: "img/bg-2.jpg"
 tags: 
     - tools
     - linux
