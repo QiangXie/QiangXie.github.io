@@ -1,69 +1,42 @@
 ---
-layout: blog
-index: true
+layout: page
+description: "Boilerplate of Hux Blog"
 ---
 
 {% for post in paginator.posts %}
-<div class="posts">
-  <section class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a href="{{ post.url }}">{{ post.title }}</a></h1>
-      <p class="post-meta">
-        <i class="fa fa-calendar"></i>
-        {{ post.date | date: "%Y" }}年{{ post.date | date: "%m" }}月{{ post.date | date: "%d" }}日
-        <i class="space"></i>
-        
-		<i class="fa fa-tags"></i>
-        <a class="post-category" href="/page/category.html#{{ post.categories }}">{{ post.categories }}</a>
-      
-	  </p>
-    </header>
-    <div class="post-main">
-      {{ post.description }}
-      <div class="readall"><a href="{{ post.url }}" id="post-readall">阅读全文&nbsp;<i class="fa fa-chevron-right"></i></a></div>
-    </div>
-  </section>
+<div class="post-preview">
+    <a href="{{ post.url | prepend: site.baseurl }}">
+        <h2 class="post-title">
+            {{ post.title }}
+        </h2>
+        {% if post.subtitle %}
+        <h3 class="post-subtitle">
+            {{ post.subtitle }}
+        </h3>
+        {% endif %}
+        <div class="post-content-preview">
+            {{ post.content | strip_html | truncate:200 }}
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%B %-d, %Y" }}
+    </p>
 </div>
+<hr>
 {% endfor %}
 
-<div class="pagination">
-  {% if paginator.previous_page %}
-  	{% if paginator.page == 2 %}
-  		<a class="pagination-item newer" href="/">
-			<i class="fa fa-arrow-left">
-			</i>
-				&nbsp;&nbsp;上一页
-		</a>
-  	{% else %}
-  	<a class="pagination-item newer" href="/page/{{paginator.previous_page}}">
-		<i class="fa fa-arrow-left">
-		</i>
-			&nbsp;&nbsp;上一页
-	</a>
-  {% endif %}
-  {% else %}
-  	<span class="pagination-item newer">
-		<i class="fa fa-arrow-left">
-		</i>
-			&nbsp;&nbsp;上一页
-	</span>
-  {% endif %}  
-  {% if paginator.next_page %}
-  	<a class="pagination-item older" href="/page/{{paginator.next_page}}">
-			下一页&nbsp;&nbsp;
-		<i class="fa fa-arrow-right"></i>
-	</a>
-  {% else %}
-  	<span class="pagination-item older">
-		下一页&nbsp;&nbsp;
-		<i class="fa fa-arrow-right">
-		</i>
-	</span>
-  {% endif %}
-</div>
-
-
-
-
-
-
+<!-- Pager -->
+{% if paginator.total_pages > 1 %}
+<ul class="pager">
+    {% if paginator.previous_page %}
+    <li class="previous">
+        <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&larr; Newer Posts</a>
+    </li>
+    {% endif %}
+    {% if paginator.next_page %}
+    <li class="next">
+        <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Older Posts &rarr;</a>
+    </li>
+    {% endif %}
+</ul>
+{% endif %}
