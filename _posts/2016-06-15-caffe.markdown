@@ -1,20 +1,20 @@
 ---
 layout: post
-title: "caffe: SGD solver"
-subtitle: "caffe learning"
+title: "caffe 学习笔记 1"
+subtitle: "caffe 中的 SGD solver"
 author: "Johnny"
 date: 2016-06-15 19:04:09
 header-img: "img/sky.jpg"
-use_math: true
 tags: 
     - deep learning
     - caffe
 ---
 
+
 solver是caffe中一个很重要的概念，简单来说solver通过不断 forward和backward计算梯度，用计算得到的梯度对模型进行优化，更新深度神经网络各层的参数，使得loss最小以使模型更好地拟合数据。
 
-1. solver的作用及分类
----------------
+# solver的作用及分类 #
+
 
 在caffe中封装的有以下几种solver：
 
@@ -43,8 +43,7 @@ solver从最开始初始化的网络模型开始在每次迭代计算过程中�
  
  
 
-2. 理论介绍
--------
+# 理论介绍 #
 
 solver把最优化深度神经网络当做最小化loss的过程。比如有一个含有$D$个训练数据的数据集，我们最优化（也即最小化)的目标就是这$D$个数据的平均loss，也即：
 $$L(W)=\frac{1}{\left | D \right |}\sum_{i}^{\left | D \right |}f_{W}(X^{(i)})+\lambda r(W)$$
@@ -54,8 +53,8 @@ $$L(W)\approx \frac{1}{N}\sum_{i}^{N}f_{W}(X^{(i)})+\lambda r(W)$$
  
  网络参数按照不同的solver定义的不同规则，结合计算得到的error gradient $\nabla f_{W}$、正则项的梯度$\nabla r(W)$更新网络权重。
 
-3. SGD solver
--------------
+# SGD solver #
+
 
 随机梯度下降算法更新网络模型权重$W$时结合梯度$\nabla L(W)$和前一次迭代的更新权重$V_t$。学习率$\alpha $（learning rate）是更新权重时的系数，momentum $\mu $是上一次迭代权重在这次迭代中权重更新的系数。整个过程可以用以下两个方程表示：
 $$V_{t+1} = \mu V_t + \alpha \nabla L(W_t)$$
@@ -64,8 +63,8 @@ $$W_{t+1} = W_t - V_{t+1}$$
 
 为了在训练中使模型更好、更快地收敛，可能需要对定义solver中的参数（$\alpha $和$\mu $)进行微调。
 
-4. 设置solver参数的一些技巧
-------------------
+# 设置solver参数的一些技巧 #
+
 
 把学习率$\alpha $设置为0.01并且在训练过程中间隔一定的迭代次数减小学习率，是一个比较好而且得到经验证明的策略。一般吧momentum $\mu$设为0.9，通过平滑迭代过程中更新权重的系数，SGD solver在最优化过程中往往更加稳定和迅速。这个策略在ILSVRC2012总被AlexNet采用，caffe也可以通过定义solver各种参数的prototxt文件复现这个策略。示例如下：
 
@@ -89,11 +88,8 @@ momentum: 0.9
 
 缺少部分，待续……
 
-5. 参考资料
--------
-1 [caffe API 文档](http://caffe.berkeleyvision.org/doxygen/classcaffe_1_1Solver.html)
-
-2 [Caffe Tutorial——Solver](http://caffe.berkeleyvision.org/tutorial/solver.html)
-
-3 [Bottou L. Stochastic gradient descent tricks[M]//Neural Networks: Tricks of the Trade. Springer Berlin Heidelberg, 2012: 421-436.](http://link.springer.com/chapter/10.1007/978-3-642-35289-8_25)
+# 参考资料 #
+1. [caffe API 文档](http://caffe.berkeleyvision.org/doxygen/classcaffe_1_1Solver.html)
+1. [Caffe Tutorial——Solver](http://caffe.berkeleyvision.org/tutorial/solver.html)
+1. [Bottou L. Stochastic gradient descent tricks[M]//Neural Networks: Tricks of the Trade. Springer Berlin Heidelberg, 2012: 421-436.](http://link.springer.com/chapter/10.1007/978-3-642-35289-8_25)
 
