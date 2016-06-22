@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "some linux tools"
-subtitle: "zsh&tmux&vim&htop"
+subtitle: "zsh tmux vim htop"
 author: "Johnny"
 date: 2016-05-09 16:10:08
 header-img: "img/sky.jpg"
