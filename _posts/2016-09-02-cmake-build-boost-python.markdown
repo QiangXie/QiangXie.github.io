@@ -133,7 +133,7 @@ Linux下生成的库通常命名为libxx.so,xx是CMakeLists.txt文件中指定�
 # 6. 参考资料 #
 
 
-1. [Boost.Python](http://www.boost.org/doc/libs/1_61_0/libs/python/doc/html/index.html "Boost.Python")
-2. [Using CMake to Build C++ Boost Python Libraries](https://www.preney.ca/paul/archives/107#comment-74315 "Using CMake to Build C++ Boost Python Libraries")
-3. [boost::python的使用](http://www.cnblogs.com/gaoxing/p/4335148.html "boost::python的使用")
-4. [Boost.Python hello world example using CMake](https://feralchicken.wordpress.com/2013/12/07/boost-python-hello-world-example-using-cmake/ "Boost.Python hello world example using CMake")
+1. [http://www.boost.org/doc/libs/1_61_0/libs/python/doc/html/index.html](http://www.boost.org/doc/libs/1_61_0/libs/python/doc/html/index.html "Boost.Python")
+2. [https://www.preney.ca/paul/archives/107#comment-74315](https://www.preney.ca/paul/archives/107#comment-74315 "Using CMake to Build C++ Boost Python Libraries")
+3. [http://www.cnblogs.com/gaoxing/p/4335148.html](http://www.cnblogs.com/gaoxing/p/4335148.html "boost::python的使用")
+4. [https://feralchicken.wordpress.com/2013/12/07/boost-python-hello-world-example-using-cmake/](https://feralchicken.wordpress.com/2013/12/07/boost-python-hello-world-example-using-cmake/ "Boost.Python hello world example using CMake")
