@@ -79,7 +79,9 @@ Boost.Python是这样一个工具，它能把C++代码封装成Python库供Pytho
 
 Linux下生成的库通常命名为libxx.so,xx是CMakeLists.txt文件中指定的名字，比如test，在这里生成的库命名为libtest.so。为了正确编译出我们需要的库文件，必须在INCLUDE_DIRECTORIES包括Boost的include路径和Python的include路径。
 
-3. 新建一个test.cpp
+
+# 3. 新建一个test.cpp #
+
 
 新建一个test.cpp:
 
@@ -99,7 +101,7 @@ Linux下生成的库通常命名为libxx.so,xx是CMakeLists.txt文件中指定�
 这里注意：`BOOST_PYTHON_MODULE(libtest)`里的lib一定要和CMakeLists.txt文件中指定的生成名字一样。（也即`ADD_LIBRARY(test SHARED test.cpp)`中的test，生成的库会在指定名字前自动加lib前缀）
 
 
-# 3. 编译Python库  #
+# 4. 编译Python库  #
 
 由于编译过程中会生成很多中间文件，所以在最开始才建立一个build文件夹，用来存放这些生成的文件。首先我们需要根据CMakeLists.txt生成gcc编译要用的Makefile：
 
@@ -112,7 +114,7 @@ Linux下生成的库通常命名为libxx.so,xx是CMakeLists.txt文件中指定�
 
 这样就生成了我们需要的libtest.so文件。
 
-# 4. 新建一个Python文件测试 #
+# 5. 新建一个Python文件测试 #
 
 现在我们可以新建一个Python程序测试我们封装的C++程序，新建lib_test.py:
 
@@ -128,7 +130,7 @@ Linux下生成的库通常命名为libxx.so,xx是CMakeLists.txt文件中指定�
 
 这里只是简单的封装一个简单的函数，没有参数传入，没有类等复杂的C++程序，要想封装以上复杂的C++程序可以参考Boost.Python官方提供的tutorial：[http://www.boost.org/doc/libs/1_61_0/libs/python/doc/html/tutorial/index.html](http://www.boost.org/doc/libs/1_61_0/libs/python/doc/html/tutorial/index.html "Boost.Python Tutorial")
 
-# 5. 参考资料 #
+# 6. 参考资料 #
 
 
 1. [http://www.boost.org/doc/libs/1_61_0/libs/python/doc/html/index.html](http://www.boost.org/doc/libs/1_61_0/libs/python/doc/html/index.html "Boost.Python")
