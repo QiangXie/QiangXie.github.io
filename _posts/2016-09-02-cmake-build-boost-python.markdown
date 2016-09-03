@@ -128,7 +128,7 @@ Linux下生成的库通常命名为libxx.so,xx是CMakeLists.txt文件中指定�
 
 当然libtest.so需要和Python文件在同一个文件夹。
 
-这里只是简单的封装一个简单的函数，没有参数传入，没有类等复杂的C++程序，要想封装以上复杂的C++程序可以参考Boost.Python官方提供的tutorial：[http://www.boost.org/doc/libs/1_61_0/libs/python/doc/html/tutorial/index.html](http://www.boost.org/doc/libs/1_61_0/libs/python/doc/html/tutorial/index.html "Boost.Python Tutorial")
+这里只是简单的封装一个简单的函数，没有参数传入，没有类等复杂的C++程序，要想封装以上复杂的C++程序可以参考Boost.Python官方提供的tutorial：[Boost.Python Tutorial](http://www.boost.org/doc/libs/1_61_0/libs/python/doc/html/tutorial/index.html )
 
 # 6. 参考资料 #
 
