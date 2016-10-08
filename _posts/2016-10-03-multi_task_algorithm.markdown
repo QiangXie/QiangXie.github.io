@@ -252,6 +252,7 @@ tags:
     	int counter = nums.size();
     	QuickSort_(nums, 0, counter - 1);
     }
+
 #7.任务顺序算法 #
 
 回到前面碰到的关于任务顺序的题，采用归并排序算法后顺利AC。代码如下：
