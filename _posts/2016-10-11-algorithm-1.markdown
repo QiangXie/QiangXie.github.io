@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "算法学习（1）"
+title: "算法学习 1"
 subtitle: "prim算法"
 author: "Johnny"
 date: 2016-10-11 19:15:09
