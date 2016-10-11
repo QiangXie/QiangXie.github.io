@@ -1,0 +1,135 @@
+---
+layout: post
+title: "算法学习（1）"
+subtitle: "prim算法"
+author: "Johnny"
+date: 2016-10-11 19:15:09
+header-img: "img/algorithm.png"
+tags: 
+    - algorithm
+    - C++
+---
+
+
+普里姆算法（Prim算法），图论中的一种算法，可在加权连通图里搜索最小生成树。意即由此算法搜索到的边子集所构成的树中，不但包括了连通图里的所有顶点（英语：Vertex (graph theory)），且其所有边的权值之和亦为最小。该算法于1930年由捷克数学家沃伊捷赫·亚尔尼克（英语：Vojtěch Jarník）发现；并在1957年由美国计算机科学家罗伯特·普里姆（英语：Robert C. Prim）独立发现；1959年，艾兹格·迪科斯彻再次发现了该算法。因此，在某些场合，普里姆算法又被称为DJP算法、亚尔尼克算法或普里姆－亚尔尼克算法。
+
+简单来说就是说存在一个有权无向图，我们想找到能把所有点连接起来的路径，并且使路径中包含的边的权重的和最小。实现策略其实很简单，就是先找到权重最小的边，然后把这个边放到路径里，然后从已经在路径里的点找跟不在路径里的点形成的权重最小的边，把它放到路径里，以此类推，直到所有点都包含在路径里。
+
+输入
+
+第1行：2个数N,M中间用空格分隔，N为点的数量，M为边的数量。（2 <= N <= 1000, 1 <= M <= 50000)
+第2 - M + 1行：每行3个数S E W，分别表示M条边的2个顶点及权值。(1 <= S, E <= N，1 <= W <= 10000)
+
+输出
+
+输出最小生成树的所有边的权值之和。
+
+输入示例
+
+9 14
+
+1 2 4
+
+2 3 8
+
+3 4 7
+
+4 5 9
+
+5 6 10
+
+6 7 2
+
+7 8 1
+
+8 9 7
+
+2 8 11
+
+3 9 2
+
+7 9 6
+
+3 6 4
+
+4 6 14
+
+1 8 8
+
+输出示例
+
+37
+
+代码如下：
+
+    #include <iostream>
+    #include <vector>
+    #include <algorithm>
+     
+    using namespace std;
+    
+    
+    struct line{
+    	int start;
+    	int end;
+    	int weight;
+    	bool hasIn = false;
+    };
+    
+    typedef line * ptl;
+    
+    bool comp(ptl & a, ptl & b)
+    {
+    	return a->weight < b->weight;
+    }
+    
+    int main()
+    {
+    	int N, M;
+    	int ans = 0;
+    	vector<ptl> ptls;
+    	vector<int> points;
+    	cin >> N >> M;
+    	for (int i = 1; i <= N;i++)
+    	{
+    		points.push_back(i);
+    	}
+    	for (int i = 0; i < M; i++)
+    	{
+    		ptl tmpPtl;
+    		tmpPtl = new line;
+    		cin >> tmpPtl->start >> tmpPtl->end >> tmpPtl->weight;
+    		ptls.push_back(tmpPtl);
+    	}
+    	sort(ptls.begin(), ptls.end(), comp);
+    	ans += ptls[0]->weight;
+    	ptls[0]->hasIn = true;
+    	points.erase(find(points.begin(), points.end(),ptls[0]->start));
+    	points.erase(find(points.begin(), points.end(), ptls[0]->end));
+    	while (!points.empty())
+    	{
+    		for (int j = 0; j < ptls.size(); j++)
+    		{
+    			if (!ptls[j]->hasIn)
+    			{
+    				if (find(points.begin(), points.end(), ptls[j]->start) != points.end() && find(points.begin(), points.end(), ptls[j]->end) == points.end())
+    				{
+    					ans += ptls[j]->weight;
+    					ptls[j]->hasIn = true;
+    					points.erase(find(points.begin(),points.end(),ptls[j]->start));
+    					break;
+    				}
+    				else if (find(points.begin(), points.end(), ptls[j]->start) == points.end() && find(points.begin(), points.end(), ptls[j]->end) != points.end())
+    				{
+    					ans += ptls[j]->weight;
+    					ptls[j]->hasIn = true;
+    					points.erase(find(points.begin(), points.end(), ptls[j]->end));
+    					break;
+    				}
+    			}
+    		}
+    	}
+    	cout << ans << endl;
+    	return 0;
+    }
+
