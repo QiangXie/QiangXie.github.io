@@ -1,0 +1,10 @@
+---
+layout: post
+title: "Linux 命令 dos2unix"
+subtitle: "文件传输导致的错误"
+author: "Johnny"
+date: 2017-07-25 18:30:09
+header-img: "img/Linux.jpg"
+tags: 
+    - Linux
+---
