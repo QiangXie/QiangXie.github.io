@@ -25,6 +25,8 @@ tags:
     ./examples/ristretto/00_quantize_squeezenet.sh: line 6: --model_quantized=models/SqueezeNet/RistrettoDemo/quantized.prototxt: No such file or directory
     ./examples/ristretto/00_quantize_squeezenet.sh: line 7: --trimming_mode=dynamic_fixed_point: command not found
     ./examples/ristretto/00_quantize_squeezenet.sh: line 8: $'--error_margin=3\r': command not found
+
+	
 我仔细查看了报错说文件不存在的路径，发现路径是对的。我又怕路径写错了，所以专门一个字一个字核对路径，确认路径肯定是正确的。我甚至怀疑是因为我用的zsh的问题，所以又特意用bash运行这个脚本…… 我试了所有我能试的方法，但是shell依然还是报错。我试着不用shell脚本了，自己把命令一个字符一个字符敲进shell总不会报错了吧！结果很神奇，shell果然没有报错，顺利运行了。这是为什么呢？于是我把这几个错误分别粘到google里搜索，结果还真让我搜索到了，如下图：
 ![java-javascript](/img/in-post/dos2unix/stackoverflow.jpg)
 原因终于找到了，这个shell脚本是我从Windows下用FileZilla传到服务器上的，Windows自动在shell脚本文件后加入了换行符，但是Linux不认识这个换行符，所以才会报错。问题找到了，解决办法也就简单了。使用shell命令`dos2unix`这个命令把换行符去掉，使用格式如下：
