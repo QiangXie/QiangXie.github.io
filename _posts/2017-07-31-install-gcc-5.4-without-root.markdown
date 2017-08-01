@@ -17,6 +17,7 @@ tags:
     wget http://mirrors-usa.go-parts.com/gcc/releases/gcc-5.4.0/gcc-5.4.0.tar.bz2
     bzcat gcc-5.4.0.tar.bz2|tar xvf -
     cd gcc-5.4.0
+
 安装GCC需要依赖三个库：GMP, MPFR 和 MPC，只需要在GCC目录下运行`./contrib/download_prerequisites`命令就可以自动下载这三个组件。这里说一下，安装软件配置系统时最好按照官方的安装文档安装，好多二手的教程要么不对，要么会走很多冤枉路，比如这三个组件，有一个教程里一通wget，然后手动编译，费时费力，使用前面这个命令一键解决问题。
 
 接下来是配置编译选项，配置之前要记住很重要的一点，安装GCC不能在它的源码目录下直接配置，需要在它的目录下新建一个文件夹，然后进入这个文件夹配置并编译安装：
