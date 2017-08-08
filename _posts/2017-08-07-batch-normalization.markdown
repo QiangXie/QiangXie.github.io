@@ -68,3 +68,4 @@ $$ y^{(k)}=\gamma ^{(k)}\hat{x}^{(k)}+\beta ^{(k)} $$
   [4]: http://blog.csdn.net/shuzfan/article/details/50723877
   [5]: http://blog.csdn.net/malefactor/article/details/51476961
   [6]: http://blog.csdn.net/happynear/article/details/44238541
+  [7]: https://www.zhihu.com/question/38102762?utm_campaign=webshare&utm_source=weibo&utm_medium=zhihu
