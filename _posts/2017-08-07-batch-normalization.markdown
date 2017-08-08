@@ -4,7 +4,7 @@ title: "Deep Learning 之 batch normalization"
 subtitle: "batch-normalization"
 author: "Johnny"
 date: 2017-08-07 18:47:09
-header-img: "img/caffe-install.jpg"
+header-img: "img/caffe_install.jpg"
 tags: 
     - deep learning 
 ---
