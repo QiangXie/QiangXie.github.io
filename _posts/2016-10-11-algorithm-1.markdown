@@ -6,8 +6,7 @@ author: "Johnny"
 date: 2016-10-11 19:15:09
 header-img: "img/algorithm.png"
 tags: 
-    - algorithm
-    - C++
+    - 数据结构与算法
 ---
 
 

@@ -6,8 +6,7 @@ author: "Johnny"
 date: 2016-05-09 16:10:08
 header-img: "img/bg-2.jpg"
 tags: 
-    - tools
-    - linux
+    - Linux
 ---
 
 因为笔者本科是学电子的，所以大概去年的这个时候，我还对Linux一点儿也不了解，我一直以为操作系统就是Windows那样的，写程序就该是用VS那样的IDE。所以，刚接触Linux的时候我极端不适应，我可以说是很排斥用Linux，我当时很赞成曾经看到的一篇文章：使用Linux的程序员都是受虐狂。尤其是用shell，这怎么用啊？难道操作电脑不该是点击鼠标吗？还有写代码，vim更是变态啊，竟然有人用这种东西，简直无法理解。虽然Linux下现在也有了图形界面，但是跟Windows比这是渣渣好吗……
@@ -16,7 +15,7 @@ tags:
 
 所谓工欲善其事，必先利其器。所以，借鉴别人的经验挑选一些好用的工具是很重要的，下面是一些我觉得好用的工具，虽然很多我用得还不是很熟，而且很多强大的功能我还没有用到，但是还是记录下来，为了方便自己（因为自己如果换一个环境就要重新配一遍，还要翻别人的博客，挺麻烦的），所以按照我的使用习惯记录下来。另外，如果别人觉得有用的话也可以略微看一下，以后如果遇到好用的工具我还会记录到这篇博客里。
 
-# 1.htop #
+**1.htop**
 
 htop 是Linux系统中的一个互动的进程查看器，一个文本模式的应用程序(在控制台或者X终端中)，需要ncurses。
 
@@ -35,7 +34,7 @@ htop的安装比较简单，直接可以用apt-get安装：
     sudo apt-get install htop
 
 
-# 2.zsh #
+**2.zsh**
 
 Ubuntu默认的shell是bash，但是zsh是一个更加强大的shell，但是因为配置太复杂，虽然很好用但是用的人不多，直到有一个叫做[oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)的开源项目，它把使用zsh的难度降了下来，接下来我们看看zsh怎么安装和配置。
 Mac默认直接有zsh的，但是Ubuntu默认没有安装zsh，需要我们自己安装：
@@ -57,7 +56,7 @@ Mac默认直接有zsh的，但是Ubuntu默认没有安装zsh，需要我们自�
 
 然后退出重新进入shell，就可以使用zsh。zsh的补全功能非常强大，切换目录时甚至可以不用cd直接输入想要切换的目录，当然了zsh的功能远不止此，具体使用可以参阅[终极 Shell](http://macshuo.com/?p=676)，里面有更详细的zsh功能介绍。
 
-# 3.tmux #
+**3.tmux**
 
 [tmux](https://tmux.github.io/)是一个优秀的终端复用软件，即使非正常掉线，也能保证当前的任务运行，这一点对于 远程SSH访问特别有用，网络不好的情况下仍然能保证工作现场不丢失!此外，tmux完全使用键盘 控制窗口，实现窗口的切换功能。来看一个tmux的使用截图：
 
@@ -67,7 +66,7 @@ Mac默认直接有zsh的，但是Ubuntu默认没有安装zsh，需要我们自�
 tmux另外一个非常赞的功能是保存工作现场，如果你用shh连接服务器工作，网络不是那么好，有时会掉线，掉线之后之前进行的工作可能就丢失了，有了tmux之后你就不用担心了，掉线之后tmux依然在后台运行，重新连接之后你只要运行tmux attach，工作现场就回来了。
 当然，tmux还有其他一些功能，同样的你也可以个性化定制自己使用tmux的习惯，只需要配置~/.tmux.conf文件，具体的使用方法请参阅[tmux的使用方法和个性化配置](http://mingxinglai.com/cn/2012/09/tmux/)
 
-# 4.vim插件 #
+**4.vim插件**
 
 
 在Linux下写程序，尤其是在没有图形界面时，一般我们使用vim写程序，当然了Emacs也是非常优秀的编辑器，这个看个人习惯选择自己喜欢的编辑器。vim是一个比较经典的编辑器（这里强烈推荐一个vim教程：[简明 Vim 练级攻略](http://coolshell.cn/articles/5426.html)），但是如果不对vim进行一些配置的话，可能会觉得vim用起来很不方便，很反人类。好在有很多大神为大家制作好用的轮子（也就是各种插件），把这些插件用上之后，vim一点儿也不比IDE差，先上一个vim的配置图：
@@ -76,7 +75,7 @@ tmux另外一个非常赞的功能是保存工作现场，如果你用shh连接�
 这个配置可以在[这里](https://github.com/humiaozuzu/dot-vimrc)找到。更强大的配置还有[spf13-vim](https://github.com/spf13/spf13-vim)。
 这些配置很强大，插件也很多，但是有些我并不需要，我最需要的是以下四个插件：vundle，NERD Tree，YouCompleteMe，Vim Powerline。
 
-## vundle ##
+**vundle**
 
 [vundle](https://github.com/VundleVim/Vundle.vim)是一个vim插件管理工具，它能够搜索、安装、更新和移除vim插件，再也不需要手动管理vim插件。
 安装vundle：
@@ -147,7 +146,7 @@ tmux另外一个非常赞的功能是保存工作现场，如果你用shh连接�
 
 我在~/.vimrc文件中配置NERD Tree，设置一个启用或禁用NERD Tree的键映射`nmap <F5> :NERDTreeToggle<cr>`，这样就可以在vim里点击F5打开或者关闭NERD Tree了。
 
-## YouCompleteMe ##
+**YouCompleteMe**
 
 用过VS的大家可能都对VS的代码补全功能记忆深刻，其实vim下一样可以进行代码补全，YouCompleteMe就是这样一个插件。[YouCompleteMe](http://valloric.github.io/YouCompleteMe/)是一个快速、支持模糊匹配的vim代码补全引擎。
 
@@ -162,7 +161,7 @@ YouCompleteMe的安装稍微麻烦一些，它需要在vundle插件执行插件�
 
 当然，对于不同的的语言支持需要不同的方法，具体可以参考[github](https://github.com/Valloric/YouCompleteMe)。
 
-## Vim Powerline ##
+**Vim Powerline**
 
 另一个插件是Vim Powerline，[Vim Powerline](https://github.com/Lokaltog/vim-powerline)是一个显示vim状态栏插件，它能够显示vim模式、操作环境、编码格式、行数/列数等信息。
 
@@ -170,7 +169,7 @@ YouCompleteMe的安装稍微麻烦一些，它需要在vundle插件执行插件�
 
 暂时我觉得好用的工具就是这些，以后觉得别的工具还会在这里更新，最后感谢那些造这些轮子并开源贡献给大家的那些大神们，如果你也用了这些工具，不妨在github上给他们点个star，算是对他们的感谢。
 
-# 5.参考资料 #
+**5.参考资料**
 
 
 1. [终极 Shell](http://macshuo.com/?p=676)

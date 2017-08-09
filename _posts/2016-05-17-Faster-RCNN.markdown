@@ -6,7 +6,6 @@ author: "Johnny"
 date: 2016-05-17 21:59:08
 header-img: "img/bg-3.jpg"
 tags: 
-    - deep learning
     - 目标检测
 ---
 
@@ -18,7 +17,7 @@ Faster-RCNN是RCNN系列检测方法中最新的方法了（Yolo除外，因为Y
 
 具体的内容可以参看论文，这里我介绍一下如何用自己的数据训练Faster-RCNN，至于如何安装我就不赘述了，可以参考rgb的[github](https://github.com/rbgirshick/fast-rcnn)。
 
-# 1. 准备数据 #
+**1. 准备数据**
 
 在rbg的原版Faster-RCNN里，他是用的Pascal voc 2007的数据集，为了使用rbg的代码，我在这里没有改变自己的数据格式，而是把标注数据整理成和Pascal voc一样的数据格式，简单来说就是新建一个文件夹，可以任意命名，我在这里假设`$pascal_format`是我新建的自己放pascal voc格式的数据文件夹。
 
@@ -291,7 +290,7 @@ Faster-RCNN是RCNN系列检测方法中最新的方法了（Yolo除外，因为Y
 
 
 
-# 2. 训练前的一些设置 #
+**2. 训练前的一些设置**
 
 
 rbg提供了两种训练方法，分别是在NIPS2015中的paper所描述的alternating optimization，另一个是end-to-end的训练方法，第一种训练方法具体可以参考论文，我在这里主要以end-to-end的训练方法为例。在训练之前需要先下载预训练模型的权重数据：
@@ -312,7 +311,7 @@ rm $FASTER_RCNN_ROOT/data/cache/voc_2007_trainval_gt_roidb.pkl
 ```
 否则，会提示错误。
 
-# 3.启动训练 #
+**3.启动训练**
 
 
 之前已经把需要的数据和预训练权重准备好了，这一步就相对简单一些，只需要输入指令启动训练：
@@ -330,7 +329,7 @@ VGG16，一般用 VGG16，其他 model我试验了一下， 效果不是很好�
 ```
 训练默认输出模型权重到`$FASTER_RCNN_ROOT/output`,70000次迭代，每10000次迭代保存一次权重。fine-tune时可以通过修改`$FASTER_RCNN_ROOT/experiment/scripts/faster_rcnn_end2end.sh`来修改初试权重和迭代次数。
 
-# 4.参考资料 #
+**4.参考资料**
 
 1. [rbg的github：rbgirshick/py-faster-rcnn](https://github.com/rbgirshick/py-faster-rcnn)
 1. [Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks](http://arxiv.org/abs/1506.01497)

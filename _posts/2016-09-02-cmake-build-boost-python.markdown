@@ -6,9 +6,7 @@ author: "Johnny"
 date: 2016-09-02 12:15:09
 header-img: "img/boost_python.jpg"
 tags: 
-    - python
-    - boost.python
-    - C++
+    - C/C++
 ---
 
 
