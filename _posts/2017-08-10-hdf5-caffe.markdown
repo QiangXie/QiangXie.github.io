@@ -1,0 +1,485 @@
+---
+layout: post
+title: "在caffe中使用HDF5格式数据进行关键点检测"
+subtitle: "hdf5"
+author: "Johnny"
+date: 2017-08-10 21:49:54
+header-img: "img/caffe_install.jpg"
+tags: 
+    - caffe学习笔记 
+---
+
+&#160; &#160; &#160; &#160;关键点检测是计算机视觉任务中常见的一个任务，比如人脸关键点检测。关键点检测是要在已知的某种图像中找到感兴趣点的二维信息，比如在人脸中找到人的五官的中间位置点的坐标信息，如下图所示：
+
+![java-javascript](/img/in-post/key-point-detect/face-key-point.jpg)
+
+&#160; &#160; &#160; &#160;图中获取到人脸的关键位置信息，可以进一步进行人脸对齐之类的操作。关键点检测同样可以用到别的方面，比如车牌关键点检测。车牌关键点检测的目的是从已经检测到的车辆图片中寻找车牌的关键信息点，比如车牌的四个角的点的坐标，可以用来进行车牌对齐，比如用仿射变换从倾斜的车牌得到较为正的车牌。
+
+生成HDF5格式的数据
+----------------
+
+&#160; &#160; &#160; &#160;和传统的分类任务使用LMDB格式的数据用于训练不同，关键点检测中标签是一个n维向量，而LMDB是一个轻量级的键值对应非关系型数据库，标签只能是一个值，所以无法使用LMDB格式的数据训练关键点检测网络。caffe中使用HDF5作为多标签训练的数据格式。HDF 是用于存储和分发科学数据的一种自我描述、多对象文件格式。HDF 是由美国国家超级计算应用中心（NCSA）创建的，以满足不同群体的科学家在不同工程项目领域之需要。简单来说，HDF5支持多标签的CNN网络训练。在caffe中专门实现了一个叫做HDF5_DATA的layer用于读取HDF5格式的数据。所以训练关键点检测的CNN网络之前需要先生成HDF5的数据。假设我们进行关键点检测时检测四个点，分别是\\((x_{0},y_{0})\\),\\((x_{1},y_{1})\\),\\((x_{2},y_{2})\\),\\((x_{3},y_{3})\\),而且已经有一个叫做train.txt的文件，里面每一行的第一个部分是图片路径，后面依次是\\(x_{0}\\),\\(y_{0}\\)……\\(x_{3}\\),\\(y_{3}\\)，如下所示：
+
+```
+/data/path/203290.jpg 191 382 191 403 287 403 287 382
+/data/path/139073.jpg 203 660 203 691 334 691 334 660
+/data/path/199778.jpg 286 829 286 854 390 854 390 829
+/data/path/156776.jpg 162 368 162 391 261 391 261 368
+```
+&#160; &#160; &#160; &#160;可以使用以下程序生成HDF5格式的数据：
+
+```python
+import sys
+sys.path.append("../../caffe/python")
+import h5py, os
+import caffe
+import numpy as np
+ 
+SIZE = 224 # fixed size to all images
+
+with open( 'train.txt', 'r' ) as T :
+     lines = T.readlines()
+     data_ = np.zeros( (len(lines), 3, SIZE, SIZE), dtype='f4' )
+     label_ = np.zeros( (len(lines), 8), dtype='f4' )
+ 
+for i,l in enumerate(lines):
+     sp = l.split(' ')
+     img = caffe.io.load_image( sp[0] )
+     height,width =  img.shape[0],img.shape[1]
+ 
+     print height,width
+     img = caffe.io.resize( img, (SIZE, SIZE, 3) ) # resize to fixed size
+     img = img.transpose(2,0,1)
+     # you may apply other input transformations here...
+     # Note that the transformation should take img from size-by-size-by-3 and transpose it to 3-by-size-by-size
+     data_[i] = img
+     for j in range(8):
+         #The coordinate values for each point are normalized
+         if (j+1)%2:
+             normalize_factor = width
+         else:
+             normalize_factor = height
+         label_[i][j] = float(sp[j+1])/float(normalize_factor)
+ 
+with h5py.File('train.h5','w') as H:
+    H.create_dataset( 'data', data=data_ ) # note the name X given to the dataset!
+    H.create_dataset( 'label', data=label_ ) # note the name y given to the dataset!
+with open('train_h5_list.txt','w') as L:
+    L.write( 'train.h5' ) # list all h5 files you are going to use
+
+```
+
+&#160; &#160; &#160; &#160;这里对图片进行了resize以适应后续的模型输入尺寸，同时对所有坐标信息进行归一化使其值均落到（0,1）之间。
+
+关键点检测CNN模型
+------------
+&#160; &#160; &#160; &#160;设计模型时参考了VGGNet和SSD中使用的基础特征提取网络，如下prototxt文件所示。这个网络的特点是所有全连接层均使用卷积层实现，这样做的好处是大大减少了计算量。具体细节可以参阅文后的参考资料。为了使最后的输出和需要检测的点的数量相匹配，最后的全连接层使用7x7的卷积核以得到8x1的feature map输出。
+```
+name: "VGG_16_PL_Key_Point"
+layers {
+  name: "data"
+  type: HDF5_DATA
+  top: "data"
+  top: "label"
+  hdf5_data_param {
+    source:"train_h5_list.txt"
+    batch_size: 32
+  }
+  include: { phase: TRAIN }
+}
+layers {
+  name: "data"
+  type: HDF5_DATA
+  top: "data"
+  top: "label"
+  hdf5_data_param {
+    source:"test_h5_list.txt"
+    batch_size: 32
+  }
+  include: { phase: TEST }
+}
+layers {
+  bottom: "data"
+  top: "conv1_1"
+  name: "conv1_1"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+  }
+}
+layers {
+  bottom: "conv1_1"
+  top: "conv1_1"
+  name: "relu1_1"
+  type: RELU
+}
+layers {
+  bottom: "conv1_1"
+  top: "conv1_2"
+  name: "conv1_2"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+  }
+}
+layers {
+  bottom: "conv1_2"
+  top: "conv1_2"
+  name: "relu1_2"
+  type: RELU
+}
+layers {
+  bottom: "conv1_2"
+  top: "pool1"
+  name: "pool1"
+  type: POOLING
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layers {
+  bottom: "pool1"
+  top: "conv2_1"
+  name: "conv2_1"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 128
+    pad: 1
+    kernel_size: 3
+  }
+}
+layers {
+  bottom: "conv2_1"
+  top: "conv2_1"
+  name: "relu2_1"
+  type: RELU
+}
+layers {
+  bottom: "conv2_1"
+  top: "conv2_2"
+  name: "conv2_2"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 128
+    pad: 1
+    kernel_size: 3
+  }
+}
+layers {
+  bottom: "conv2_2"
+  top: "conv2_2"
+  name: "relu2_2"
+  type: RELU
+}
+layers {
+  bottom: "conv2_2"
+  top: "pool2"
+  name: "pool2"
+  type: POOLING
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layers {
+  bottom: "pool2"
+  top: "conv3_1"
+  name: "conv3_1"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 256
+    pad: 1
+    kernel_size: 3
+  }
+}
+layers {
+  bottom: "conv3_1"
+  top: "conv3_1"
+  name: "relu3_1"
+  type: RELU
+}
+layers {
+  bottom: "conv3_1"
+  top: "conv3_2"
+  name: "conv3_2"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 256
+    pad: 1
+    kernel_size: 3
+  }
+}
+layers {
+  bottom: "conv3_2"
+  top: "conv3_2"
+  name: "relu3_2"
+  type: RELU
+}
+layers {
+  bottom: "conv3_2"
+  top: "conv3_3"
+  name: "conv3_3"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 256
+    pad: 1
+    kernel_size: 3
+  }
+}
+layers {
+  bottom: "conv3_3"
+  top: "conv3_3"
+  name: "relu3_3"
+  type: RELU
+}
+layers {
+  bottom: "conv3_3"
+  top: "pool3"
+  name: "pool3"
+  type: POOLING
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layers {
+  bottom: "pool3"
+  top: "conv4_1"
+  name: "conv4_1"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 512
+    pad: 1
+    kernel_size: 3
+  }
+}
+layers {
+  bottom: "conv4_1"
+  top: "conv4_1"
+  name: "relu4_1"
+  type: RELU
+}
+layers {
+  bottom: "conv4_1"
+  top: "conv4_2"
+  name: "conv4_2"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 512
+    pad: 1
+    kernel_size: 3
+  }
+}
+layers {
+  bottom: "conv4_2"
+  top: "conv4_2"
+  name: "relu4_2"
+  type: RELU
+}
+layers {
+  bottom: "conv4_2"
+  top: "conv4_3"
+  name: "conv4_3"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 512
+    pad: 1
+    kernel_size: 3
+  }
+}
+layers {
+  bottom: "conv4_3"
+  top: "conv4_3"
+  name: "relu4_3"
+  type: RELU
+}
+layers {
+  bottom: "conv4_3"
+  top: "pool4"
+  name: "pool4"
+  type: POOLING
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layers {
+  bottom: "pool4"
+  top: "conv5_1"
+  name: "conv5_1"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 512
+    pad: 1
+    kernel_size: 3
+  }
+}
+layers {
+  bottom: "conv5_1"
+  top: "conv5_1"
+  name: "relu5_1"
+  type: RELU
+}
+layers {
+  bottom: "conv5_1"
+  top: "conv5_2"
+  name: "conv5_2"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 512
+    pad: 1
+    kernel_size: 3
+  }
+}
+layers {
+  bottom: "conv5_2"
+  top: "conv5_2"
+  name: "relu5_2"
+  type: RELU
+}
+layers {
+  bottom: "conv5_2"
+  top: "conv5_3"
+  name: "conv5_3"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 512
+    pad: 1
+    kernel_size: 3
+  }
+}
+layers {
+  bottom: "conv5_3"
+  top: "conv5_3"
+  name: "relu5_3"
+  type: RELU
+}
+layers {
+  bottom: "conv5_3"
+  top: "pool5"
+  name: "pool5"
+  type: POOLING
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layers {
+  bottom: "pool5"
+  top: "fc6"
+  name: "fc6"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 1024
+    kernel_size: 3
+    dilation: 3
+    pad: 3
+  }
+}
+layers {
+  bottom: "fc6"
+  top: "fc6"
+  name: "relu6"
+  type: RELU
+}
+layers {
+  bottom: "fc6"
+  top: "fc6"
+  name: "drop6"
+  type: DROPOUT
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layers {
+  bottom: "fc6"
+  top: "fc7"
+  name: "fc7"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 1024
+    kernel_size: 1
+  }
+}
+layers {
+  bottom: "fc7"
+  top: "fc7"
+  name: "relu7"
+  type: RELU
+}
+layers {
+  bottom: "fc7"
+  top: "fc7"
+  name: "drop7"
+  type: DROPOUT
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layers {
+  bottom: "fc7"
+  top: "fc8"
+  name: "fc8_modify"
+  type: CONVOLUTION
+  convolution_param {
+    num_output: 8
+    kernel_size: 7
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layers {
+  name: "accuracy"
+  type: EUCLIDEAN_LOSS
+  bottom: "fc8"
+  bottom: "label"
+  top: "accuracy"
+  include: { phase: TEST }
+}
+layers {
+  name: "loss"    
+  type: EUCLIDEAN_LOSS
+  bottom: "fc8"
+  bottom: "label"
+  top: "loss"
+  include: { phase: TRAIN}
+}
+
+```
+
+参考资料
+------
+
+ 1. [stackoverflow-How to feed caffe multi label data in HDF5 format?][1]
+ 2. [h5py-Quick Start Guide][2]
+ 3. [Prepare image dataset for image classification task][3]
+ 4. [【Caffe实践】基于Caffe的人脸关键点检测实现][4]
+ 5. [numpy中高维数组转置][5]
+ 6. [github-RiweiChen/DeepFace][6]
+ 7. [Fully convolutional reduced VGGNet][7]
+
+ 
+
+
+  [1]: http://docs.h5py.org/en/latest/quick.html#quick
+  [2]: http://docs.h5py.org/en/latest/quick.html#quick
+  [3]: https://stackoverflow.com/documentation/caffe/5344/prepare-data-for-training/19019/prepare-image-dataset-for-image-classification-task#t=201708091413310826863
+  [4]: http://blog.csdn.net/chenriwei2/article/details/49706563
+  [5]: http://blog.csdn.net/u013796132/article/details/70207945
+  [6]: https://github.com/RiweiChen/DeepFace/tree/master/FaceAlignment/try1_2
+  [7]: https://gist.github.com/weiliu89/2ed6e13bfd5b57cf81d6
