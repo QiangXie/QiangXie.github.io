@@ -135,7 +135,7 @@ tmux另外一个非常赞的功能是保存工作现场，如果你用shh连接�
 
 &#160; &#160; &#160; &#160;具体使用方法还可以参阅[Vim配置、插件和使用技巧](http://www.jianshu.com/p/a0b452f8f720)。
 
-** NERD Tree **
+**NERD Tree**
 
 &#160; &#160; &#160; &#160;[NERD Tree](https://github.com/scrooloose/nerdtree)是一个树形目录插件，方便浏览当前目录有哪些目录和文件。
 
