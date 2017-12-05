@@ -41,7 +41,7 @@ tags:
 
 ## 3.源代码 ##
 
-&#160; &#160; &#160; &#160;等我整理好之后会将源代码放出，未完，待续。
+&#160; &#160; &#160; &#160;代码我已经整理好放到GitHub上了，[地址在这里][7]。如果这个小工程帮到你了，还望你在GitHub上给个star。
 
 
 
@@ -65,3 +65,4 @@ tags:
   [4]: https://stackoverflow.com/questions/29263090/ffmpeg-avframe-to-opencv-mat-conversion
   [5]: http://hasanaga.info/tag/ffmpeg-avframe-to-opencv-mat/
   [6]: http://blog.csdn.net/leixiaohua1020/article/details/44064715
+  [7]: https://github.com/QiangXie/FFmpeg-Decoder-Linux
