@@ -20,8 +20,21 @@ tags:
 
 &#160; &#160; &#160; &#160;FFmpeg依赖很多库，所以需要安装很多库，包括NASM、YASM、libx64、libx265、libvpx、libopus等，还好FFmpeg官网上提供了FFmpeg的安装指导，我的系统是Ubuntu，所以我使用的是参考文献[1]里安装指导。如果有root权限，指导里很多库都可以使用`sudo apt-get install`命令进行安装，如果像我一样没有root权限，那就都使用源码编译的安装方式。使用源码编译安装有两个注意事项：
 
-1. 官网提供的安装是按照软件使用者的方式安装，默认不编译生成动态链接库.so文件，所以在编译安装过程中很多命令都有类似`--disable-shared`的参数。为了开发使用，在编译的过程中去掉所有的类似命令，有的还需要加入`--enable-shared`命令。其中一个库还要加入`--enable-fPIC`命令，如果不加入会报错。-fPIC命令在编译C/C++时是一个很常用的选项，-fPIC表明使用地址无关代码。（PIC：Position Independent Code. ）Linux下编译共享库时，必须加上-fPIC参数，否则在链接时会有错误提示。具体有关-fPIC的知识请参阅文后的链接[2]。
-2. 如果使用源码编译安装的方式安装以上各个依赖库，其中有一个库libvpx，是VP8/VP9格式的视频的编码器和解码器，它的下载链接是googlesource.com。由于众所周知的原因，它这个链接在大陆是打不开的，需要你使用一些其他的方法才能下载到，下载方法我就不赘述了，身为一个程序员这应该是必备技能。
+### 1）官网提供的安装方法不会生成.so动态链接库 ###
+
+&#160; &#160; &#160; &#160;官网提供的安装是按照软件使用者的方式安装，默认不编译生成动态链接库.so文件，所以在编译安装过程中很多命令都有类似`--disable-shared`的参数。为了开发使用，在编译的过程中去掉所有的类似命令，有的还需要加入`--enable-shared`命令。其中一个库还要加入`--enable-fPIC`命令，如果不加入会报错。-fPIC命令在编译C/C++时是一个很常用的选项，-fPIC表明使用地址无关代码。（PIC：Position Independent Code. ）Linux下编译共享库时，必须加上-fPIC参数，否则在链接时会有错误提示。具体有关-fPIC的知识请参阅文后的链接[2]。具体需要修改的编译配置选项如下：
+
+- 在配置libx264编译选项时，需要加入--enable-shared选项；
+- 在编译libx265时需要把编译选项中的-DENABLE_SHARED:bool=off改为-DENABLE_SHARED:bool=true；
+- 在编译libvpx时在配置编译选项时，加入选项--enable-shared --enable-pic；
+- 在编译libfdk-aac时把编译选项中的--disable-shared去掉，改为--enable-shared；
+- 在编译libmp3lame时把编译选项中的--disable-shared去掉，改为--enable-shared；
+- 在编译libopus时把编译选项中的--disable-shared去掉，改为--enable-shared；
+- 在最后编译FFmpeg配置编译选项时，加入--enable-shared选项。
+
+### 2）libvpx的源码需要FQ下载 ###
+
+&#160; &#160; &#160; &#160;如果使用源码编译安装的方式安装以上各个依赖库，其中有一个库libvpx，是VP8/VP9格式的视频的编码器和解码器，它的下载链接是googlesource.com。由于众所周知的原因，它这个链接在大陆是打不开的，需要你使用一些其他的方法才能下载到，下载方法我就不赘述了，FQ应该是一个技术人员的必备技能。
 
 ## 2.FFmpeg解码视频保存图片 ##
 
