@@ -50,7 +50,24 @@ $$ IOU=\frac{( l-x')( l-y')}{2l^{2} -( l-x')( l-y')} $$
 
 $$ EMO=\int ^{\frac{s_{A}}{2}}_{0}\int ^{\frac{s_{A}}{2}}_{0}\left(\frac{2}{sA}\right)^{2}\frac{( l-x')( l-y')}{2l^{2} -( l-x')( l-y')} dx'dy' $$
 
-&#160; &#160; &#160;从这个公式可以看出人脸越大越能获得更高的EMO score，当人脸是固定大小的时候，\\( s_{A}\\)越小EMO score越大。
+&#160; &#160; &#160;从这个公式可以看出人脸越大越能获得更高的EMO score，当人脸是固定大小的时候，\\( s_{A}\\)越小EMO score越大。针对这个结论，作者同样做了实验验证，作者实验\\( s_{A}\\)分别等于8和16时的EMO score，结果如下图，同样支持了上述结论。
+
+![java-javascript](/img/in-post/seeing-small-faces/sa-exp.png)
+
+## 3.Strategies of New Anchor Design ##
+
+&#160; &#160; &#160;知道问题出现在哪，下一步就好办了。上面的理论推导以及实验告诉我们，人脸检测任务中基于anchor机制的算法获得的recall和EMO Score高度相关，EMO Score值越大，recall越高。而EMO Score的值又和\\( s_{A}\\)高度相关，\\( s_{A}\\)越小EMO Score的值越大。
+
+### 3.1 Stride Reduction with Enlarged Feature Maps ###
+&#160; &#160; &#160; 第一种方法是增大feature map的尺寸，增大feature map的尺寸之后，相邻特征点之间映射回原图的距离就减小了，也即减小了\\( s_{A}\\)的值，具体方法如下图：
+
+![java-javascript](/img/in-post/seeing-small-faces/increase-feature-maps.png)
+
+&#160; &#160; &#160;如上图所示，分别采取a.对要进行检测的图进行上采样；b.对上采样之后的特征图和前一层的特征图进行element-wise相加，针对通道数不一致的问题使用1x1卷积使相加的两个特征图通道一致；c.使用Dilated convolution对特征图进行上采样。
+
+### 3.2 Extra Shifted Anchors ###
+
+
 
 **参考资料**
 
