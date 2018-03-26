@@ -38,6 +38,19 @@ $$ \int ^{H}_{0}\int ^{W}_{0} p( x,y) dxdy=1 $$
 
 $$ EMO=\int ^{H}_{0}\int ^{W}_{0} p( x,y)\max_{a\in A}\frac{| B_{f} \cap B_{a}| }{| B_{f} \cup B_{a}| } dxdy=1 $$
 
+&#160; &#160; &#160; &#160;如下图所示：
+
+![java-javascript](/img/in-post/seeing-small-faces/face-anchor.png)
+
+&#160; &#160; &#160; 人脸的中心点被4个anchor的中心点包围，距离人脸最近的中心点所对应的anchor肯定能获得最大的IOU值。现举例分析如果左上侧的anchor和人脸之间的IOU值最大，则人脸的中心点肯定在下图的蓝色区域。因为如果人脸的中心点不在图示的蓝色区域内，则人脸的外界矩形框肯定跟其他三个anchor中至少一个之间的IOU值左上边那个anchor的大。则人脸外接矩形和anchor box的IOU值定义如下：
+
+$$ IOU=\frac{( l-x')( l-y')}{2l^{2} -( l-x')( l-y')} $$
+
+&#160; &#160; &#160; 可以看出IOU值是\\((x',y')\\)的函数，anchor box的中心离人脸外界矩形框的中心越近IOU值越大。相应的，EMO公式可以定义如下：
+
+$$ EMO=\int ^{\frac{s_{A}}{2}}_{0}\int ^{\frac{s_{A}}{2}}_{0}\left(\frac{2}{sA}\right)^{2}\frac{( l-x')( l-y')}{2l^{2} -( l-x')( l-y')} dx'dy' $$
+
+&#160; &#160; &#160;从这个公式可以看出人脸越大越能获得更高的EMO score，当人脸是固定大小的时候，\\( s_{A}\\)越小EMO score越大。
 
 **参考资料**
 
