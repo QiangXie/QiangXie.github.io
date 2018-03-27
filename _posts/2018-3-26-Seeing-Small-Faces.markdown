@@ -67,25 +67,28 @@ $$ EMO=\int ^{\frac{s_{A}}{2}}_{0}\int ^{\frac{s_{A}}{2}}_{0}\left(\frac{2}{sA}\
 
 ### 3.2 Extra Shifted Anchors ###
 
+&#160; &#160; &#160;前面分析知道EMO Score值越大对小脸的检测效果也好，为了增加EMO Score需要减小\\(s_{A}\\)，而\\(s_{A}=s_{F}\\)，那是不是可以考虑不改变\\(s_{F}\\)只改变\\(s_{A}\\)呢？答案是肯定的，作者考虑使用另外一种方法减小\\(s_{A}\\)而不改变\\(s_{F}\\)，那就是所谓的Extra Shifted Anchors。具体采用方法如下：anchor的中心点可以不一定在stride的中心，可以在stride周围增加anchor点，这样\\(s_{A}\\)就相应减小了，如下图所示：
 
+![java-javascript](/img/in-post/seeing-small-faces/increase-anchor.png)
+
+&#160; &#160; &#160;a.不增加额外anchor，\\(s_{A}=s_{F}\\)；b.在原有的每个anchor右下角增加一个anchor，这个时候\\(s_{A} =\sqrt{2} s_{F}\\)；c.在每个原有anchor的右方、下方和右下方各增加一个anchor，此时\\(s_{A} =\frac{s_{A}}{2}\\)。实验结果表明，增加额外的anchor可以提高小脸的平均IOU值，如下图所示：
+
+![java-javascript](/img/in-post/seeing-small-faces/increase_anchor_result.png)
+
+### 3.3 Face Shift Jittering & Hard Face Compensation ###
+
+&#160; &#160; &#160;基于anchor的目标检测算法中anchor的位置一般是固定的，映射回输入的原图中每个anchor之间有一定距离。但是人脸在输入图片中并不是固定的，它可能在图片任何一个位置，那些中心点离anchor的中心点远的人脸和anchor之间总是会获得较小的IOU值。为了克服这个缺点，在训练的时候随机对图片进行一定的平移，这样理论上就能解决上述问题。
+
+&#160; &#160; &#160;还存在一种情况，那就是：经过以上种种策略之后，还是有一些人脸因为和所有anchor的位置相距太远，它和任何一个anchor的IOU值依然小于匹配anchor的阈值，这种情况怎么办呢？论文中采取的策略是：对于这种人脸，把它当做hard face，对这种hard face计算它和所有anchor之间的IOU值，然后进行排序，选取IOU最高的N个anchor都认为和这个hard face匹配上了，N值在后续实验中确定。
+
+&#160; &#160; &#160;实验结果证明经过上述策略改进之后的算法确实对小脸检测的准确率有很大提升，这些策略对于目标检测算法的设计具有借鉴意义。
 
 **参考资料**
 
 
- 1. [Recurrent Scale Approximation for Object Detection in CNN-arxiv][1]
- 2. [RSA-for-object-detection Matlab 版本 --github][2]
- 3. [Octave cp2tform.m源码][3]
- 4. [matlab的矩阵左除（A\B）是如何实现的？--知乎][4]
- 5. [How to capture frame from RTSP Stream witg FFMPEG Api, OpenCV][5]
- 6. [FFmpeg源代码简单分析--雷霄骅][6]
+ 1. [arxiv：Seeing Small Faces from Robust Anchor's Perspective][1]
 
  
 
 
-  [1]: https://arxiv.org/pdf/1707.09531.pdf
-  [2]: https://github.com/sciencefans/RSA-for-object-detection
-  [3]: https://sourceforge.net/p/octave/image/ci/default/tree/inst/cp2tform.m#l121
-  [4]: https://www.zhihu.com/question/25036509
-  [5]: http://hasanaga.info/tag/ffmpeg-avframe-to-opencv-mat/
-  [6]: http://blog.csdn.net/leixiaohua1020/article/details/44064715
-  [7]: https://github.com/QiangXie/FFmpeg-Decoder-Linux
+  [1]: https://arxiv.org/abs/1802.09058v1
