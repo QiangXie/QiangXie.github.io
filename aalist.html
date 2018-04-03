@@ -10,9 +10,9 @@ header-img: "img/bg-5.jpg"
       <ul>
 		<h2 class="date02">< a href=" ">折叠/展开</ a></h2>
    {% for post in paginator.posts %}
+      < a href="{{ post.url | prepend: site.baseurl }}">
 		<li class="green">
-		< a href="{{ post.url | prepend: site.baseurl }}">
-          <h3>{{ post.date | date: "%B %-d" }}<span>{{ post.date | date: "%Y" }}</span></h3>
+          <h3>{{ post.date | date: "%B %-d, %Y" }}</h3>
           <dl>
             <dt>
 			{{ post.title }}
@@ -23,8 +23,8 @@ header-img: "img/bg-5.jpg"
 			{% endif %}
 			</span></dt>
           </dl>
-		  </ a>
         </li>
+		 </ a>
   {% endfor %}
    </ul>
     </div>
