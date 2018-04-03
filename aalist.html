@@ -9,7 +9,7 @@ header-img: "img/bg-5.jpg"
 	 <div class="history-date">
       <ul>
 		<h2 class="date02"><a href="#nogo">折叠/展开</a></h2>
-   {% for post in paginator.posts %}
+   {% for post in site.posts %}
       <a href="{{ post.url | prepend: site.baseurl }}">
 		<li class="green">
           <h3>{{ post.date | date: "%B %-d, %Y" }}</h3>
