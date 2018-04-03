@@ -1,0 +1,32 @@
+---
+layout: page
+title: "content list"
+description: ""
+header-img: "img/bg-5.jpg"
+---
+<div class="demo">
+  <div class="history">
+	 <div class="history-date">
+      <ul>
+		<h2 class="date02">< a href=" ">折叠/展开</ a></h2>
+   {% for post in paginator.posts %}
+		<li class="green">
+		< a href="{{ post.url | prepend: site.baseurl }}">
+          <h3>{{ post.date | date: "%B %-d" }}<span>{{ post.date | date: "%Y" }}</span></h3>
+          <dl>
+            <dt>
+			{{ post.title }}
+			<span>{% if post.subtitle %}
+			{{ post.subtitle }}
+			{% else %}
+			{{ post.content | strip_html | truncate:30 }}
+			{% endif %}
+			</span></dt>
+          </dl>
+		  </ a>
+        </li>
+  {% endfor %}
+   </ul>
+    </div>
+  </div>
+</div>
