@@ -43,7 +43,7 @@ $$ L^{landmark}_{i} =||\hat{y}^{landmark}_{i} -y^{landmark}_{i} ||^{2}_{2} $$
 
 $$ min\sum\nolimits ^{N}_{i=1}\sum\nolimits _{j\in \{det,box,landmark\}} \alpha _{j} \beta ^{j}_{i} L^{j}_{i} $$
 
-&#160; &#160; &#160; &#160;在论文中，作者对P-Net和R-Net使用\\(\alpha _{det} =1,\alpha _{box} =0.5,\alpha _{landmark} =0.5\\),在O-Net分别设置\\(alpha _{det} =1,\alpha _{box} =0.5,\alpha _{landmark} =1\\)增加关键点loss的权重以获得更为准确的关键点位置信息。
+&#160; &#160; &#160; &#160;在论文中，作者对P-Net和R-Net使用\\(\alpha _{det} =1,\alpha _{box} =0.5,\alpha _{landmark} =0.5\\),在O-Net分别设置\\(\alpha _{det} =1,\alpha _{box} =0.5,\alpha _{landmark} =1\\)增加关键点loss的权重以获得更为准确的关键点位置信息。
 
 &#160; &#160; &#160; 为了使算法在hard sample上获得更好的表现，这篇论文还增加了Online Hard sample mining。具体做法如下：在一次mini batch训练的时候选取获得loss最高的70%的样本进行反向传播，忽略剩下30%的样本。这样就提高了算法在难分样本上的检测能力，后续的实验也证明了以上结论。
 
