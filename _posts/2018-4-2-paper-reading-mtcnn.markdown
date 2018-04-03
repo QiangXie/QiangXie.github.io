@@ -10,7 +10,7 @@ tags:
     - Paper Reading
 ---
 
-1. 算法核心内容 
+## 1. 算法核心内容 ## 
 
 &#160; &#160; &#160; &#160;本论文提出了一种分步、多任务（同时预测人脸和人脸关键点）的人脸检测算法，算法的整体Pipeline如下图所示：
 
@@ -19,13 +19,13 @@ tags:
 &#160; &#160; &#160; &#160;拿到一张图片后，首先对图片进行resize到不同尺寸得到图形金字塔。然后作者设计一个全卷积神经网络P-Net（Proposal Network）用于产生人脸候选框和回归具体位置坐标的回归向量，然后使用NMS合并重合度较高的候选框。把P-Net产生的所有候选人脸
 送入到另一个叫做Refine Network (R-Net)的卷积网络用来去掉第一步产生的候选疑似人脸中大部分的false example。R-Net同时对候选人脸进行一定的回归得到较为准确的人脸位置信息，同P-Net一样，R-Net之后同样适用NMS进行候选框去重。最后一个阶段，适用和R-Net相似的卷积网络对人脸进行更准确的回归，同时获得人脸的关键点信息。
 
-2.CNN网络结构
+## 2.CNN网络结构 ##
 
 &#160; &#160; &#160; &#160;对于网络结构作者分析如下：（1）卷积层中的filter缺乏差异性限制了它们的识别能力。**（这句话没看懂，也没看出作者以这个论点做出什么改进，如果有人看懂这句话什么意思，求告知。）**（2）和多目标检测相比，人脸检测问题是一个二分类问题，所以它每一层可能需要更少的卷积核。**（这一句也没看懂，这个原因跟结果之间感觉没有什么联系。）**针对以上两个问题，作者减少了卷积核的个数并且把5x5的卷积核改为3x3的卷积核。上述改进使得算法获得又快又准的准确率。具体网络结构如下：
 
 ![java-javascript](/img/in-post/mtcnn/cnn_arc.png)
 
-3.训练
+## 3.训练 ##
 
 &#160; &#160; &#160; &#160;该算法一共需要训练三个部分：一个人脸/非人脸的二分类器、一个bounding box回归器和一个人脸关键点定位回归。对是不是人脸的判别使用经典的交叉熵loss：
 
@@ -50,7 +50,7 @@ $$ min\sum\nolimits ^{N}_{i=1}\sum\nolimits _{j\in \{det,box,landmark\}} \alpha 
 **参考资料**
 
 
- 1. [Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks[1]
+ 1.[Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks][1]
 
  
 

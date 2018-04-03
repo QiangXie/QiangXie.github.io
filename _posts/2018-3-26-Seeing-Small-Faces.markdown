@@ -6,7 +6,8 @@ author: "Johnny"
 date: 2018-3-26 11:03:54
 header-img: "img/caffe_install.jpg"
 tags: 
-    - Computer Vision 
+    - Face Detection
+    - Paper Reading 
 ---
 
 ## 1. 问题阐述 ##
