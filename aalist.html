@@ -19,7 +19,7 @@ header-img: "img/bg-5.jpg"
 			<span>{% if post.subtitle %}
 			{{ post.subtitle }}
 			{% else %}
-			{{ post.content | strip_html | truncate:30 }}
+			{{ post.content | strip_html | truncate:60 }}
 			{% endif %}
 			</span></dt>
           </dl>
