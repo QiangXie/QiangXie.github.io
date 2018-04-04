@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Categories"
+title: "content list"
 description: ""
 header-img: "img/bg-5.jpg"
 ---
@@ -9,25 +9,23 @@ header-img: "img/bg-5.jpg"
 	 <div class="history-date">
       <ul>
 		<h2 class="date02"><a href="#nogo">折叠/展开</a></h2>
-		   {% for post in site.posts %}
-				<a href="{{ post.url | prepend: site.baseurl }}">
-					<li class="green">
-						<h3>{{ post.date | date: "%M.%D }}<span>{{ post.date | date: "%Y }}</span></h3>
-							<dl>
-								<dt>
-									<strong>{{ post.title }}</strong>
-										<span>
-										{% if post.subtitle %}
-											{{ post.subtitle }}
-										{% else %}
-											{{ post.content | strip_html | truncate:60 }}
-										{% endif %}
-										</span>
-								</dt>
-							</dl>
-					</li>
-				</a>
-		  {% endfor %}
+   {% for post in site.posts %}
+      <a href="{{ post.url | prepend: site.baseurl }}">
+		<li class="green">
+          <h3>{{ post.date | date: "%M.%D }}<span>{{ post.date | date: "%Y }}</span></h3>
+          <dl>
+            <dt>
+			<strong>{{ post.title }}</strong>
+			<span>{% if post.subtitle %}
+			{{ post.subtitle }}
+			{% else %}
+			{{ post.content | strip_html | truncate:60 }}
+			{% endif %}
+			</span></dt>
+          </dl>
+        </li>
+		 </a>
+  {% endfor %}
    </ul>
     </div>
   </div>
