@@ -25,7 +25,6 @@ header-img: "img/bg-5.jpg"
 		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
             <!-- 标签列表 -->
-			{% for tag in site.tags %}
 			<div class="one-tag-list">
 				{% for post in site.posts %}
 				  <!-- <li class="listing-item">
@@ -33,7 +32,6 @@ header-img: "img/bg-5.jpg"
 				  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
 				  </li> -->
 				 <div class="post-preview">
-					<p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p>
 				    <a href="{{ post.url | prepend: site.baseurl }}">
 				        <h2 class="post-title">
                             {{ post.title }}
@@ -44,11 +42,11 @@ header-img: "img/bg-5.jpg"
 				        </h3>
 				        {% endif %}
 				    </a>   
+					<p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p>
 				</div>
 				<hr>
 				{% endfor %}
 			</div>
-			{% endfor %}
 
 		</div>
 	</div>
