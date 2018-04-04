@@ -12,7 +12,7 @@ header-img: "img/bg-5.jpg"
    {% for post in site.posts %}
       <a href="{{ post.url | prepend: site.baseurl }}">
 		<li class="green">
-          <h3>{{ post.date | date: "%M.%D }}<span>{{ post.date | date: "%Y }}</span></h3>
+          <h3>{{ post.date | date: "%M.%D" }}<span>{{ post.date | date: "%Y" }}</span></h3>
           <dl>
             <dt>
 			<strong>{{ post.title }}</strong>
