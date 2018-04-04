@@ -33,6 +33,7 @@ header-img: "img/bg-5.jpg"
 				  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
 				  </li> -->
 				 <div class="post-preview">
+					<p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p>
 				    <a href="{{ post.url | prepend: site.baseurl }}">
 				        <h2 class="post-title">
                             {{ post.title }}
@@ -42,8 +43,7 @@ header-img: "img/bg-5.jpg"
 				            {{ post.subtitle }}
 				        </h3>
 				        {% endif %}
-				    </a>
-				    <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p>
+				    </a>   
 				</div>
 				<hr>
 				{% endfor %}

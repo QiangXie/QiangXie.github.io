@@ -3,7 +3,7 @@ layout: post
 title: "论文阅读Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks "
 subtitle: "一个快速准确的人脸检测算法"
 author: "Johnny"
-date: 2018-3-26 11:03:54
+date: 2018-4-2 14:03:54
 header-img: "img/caffe_install.jpg"
 tags: 
     - Face Detection 
