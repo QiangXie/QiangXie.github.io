@@ -10,6 +10,7 @@ tags:
 ---
 
 
+## RNN、CTC和OCR ##
 
 &#160; &#160; &#160; &#160;OCR（Optical Character Recognition，光学字符识别）它是利用光学技术和计算机技术把印在或写在纸上的文字读取出来，并转换成一种计算机能够接受、人又可以理解的格式。OCR用处很广，例如车牌识别，身份证等证件的识别，文档扫描，等等。早期的OCR技术一般使用传统的图像处理技术，比如灰度化、二值化、找轮廓、分割、识别。这些技术的应用高度依赖算法工程师对数据的理解，而且设计的算法通用性差，基本不可能从一个场景迁移到另一个场景，这些缺点都说明了OCR技术还存在很大的问题。
 
@@ -20,6 +21,8 @@ tags:
 &#160; &#160; &#160; &#160;上面说了OCR和语音识别有着一定的相似性，那是否可以用RNN+CTC的方法进行OCR呢？答案是肯定的。但是，存在一个问题，语音信息是天然的时间序列，文本不是时间序列怎么适应RNN的序列输入要求呢？解决方法是卷积神经网络。卷积神经网络本来就是为图像处理专门设计的人工神经网络结构，使用CNN提取抽象的特征，对特征沿纵向案列切分就可以构造和时间序列类似的特征序列。论文《An End-to-End Trainable Neural Network for Image-based Sequence Recognition and Its Application to Scene Text Recognition》提出了一种使用CNN提取特征构造序列并使用LSTM+CTC的模型进行文本识别，获得了相当不错的结果。
 
 ![java-javascript](/img/in-post/CRNN-TensorFlow/crnn.jpg)
+
+## TensorFlow实现CRNN+CTC的一些经验 ##
 
 &#160; &#160; &#160; &#160;本文是我使用TensorFlow实现一个文本识别模型的记录，对于碰到的一些问题和解决的办法做一个总结。
 
