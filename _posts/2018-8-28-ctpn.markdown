@@ -1,0 +1,70 @@
+---
+layout: post
+title: "论文阅读Detecting Text in Natural Image with Connectionist Text Proposal Network"
+subtitle: "一个引入序列信息的文本检测方法"
+author: "Johnny"
+date: 2018-08-28 18:03:54
+header-img: "img/caffe_install.jpg"
+tags: 
+    - OCR
+    - Paper Reading
+    
+---
+
+1. 算法核心内容 
+
+&#160; &#160; &#160; &#160;本论文提出了一个使用CNN和LSTM的文本检测算法，CNN学习深度特征，使用LSTM学习使用文本特征序列中的有用信息用于文本检测，获得不错的检测效果。算法整体流程如下文所示：
+
+![java-javascript](/img/in-post/paper-ctpn/architecture.png)
+
+
+1. 算法对输入图片首先使用VGG网络的前五个conv模块提取深度特征，得到大小为`W*H*C`的特征图；
+2. 对获得的特征图使用SSD中类似的`3*3`卷积核进行滑动卷积得到宽度为`W`的特征序列，和SSD不同的是，每个`3*3`的卷积核卷积的信息并不是用来回归得到检测目标的位置信息，而是用来构造适合LSTM输入的特征序列；
+3. 将每一行滑动卷积得到的特征序列送入LSTM中，得到`W*256`维的输出；
+4. 将LSTM输出的`W*256`维的数据通过一个全连接降维到512维；
+5. 第五步也是最重要的一步，和传统目标检测直接使用区域feature回归出一个独立目标不同，文本检测如果是检测一个单词或者一个字母或者一个字符都是不太可靠的，最好的检测办法是在图片中检测整个文本行。如下图所示：
+
+![java-javascript](/img/in-post/paper-ctpn/difference.png)
+
+文本检测的目标和通用目标检测算法主要的区别是文本行是一行，是一个细条状的目标。很自然的，对于这样一个细条状的文本行进行检测时，可以看做是检测若干个文本行小部件，这些小部件检测到的内容可以是一个字符或者笔画或者字符的一部分，如上图中的右侧图，一个小部件是一个宽度为16个像素点宽度的小矩形，每个小矩形上下边的坐标靠LSTM输出的feature信息进行预测。预测时使用和Faster-RCNN以及SSD类似的anchor机制，只不过这`k`个anchor是一个竖直anchor：只预测固定宽度的小矩形部件的上下边的y坐标的位置信息。比如`k=10`，意思是这10个anchor的区别是高度大小不同（论文里的anchor小矩形的高度从11个像素点到273个像素点之间）。由于不同小矩形部件的上下边的坐标是可以变化的，所以CTPN可以对前后字符大小不一致的文本行进行检测。回归公司如下：
+
+
+
+
+2.CNN网络结构 
+
+&#160; &#160; &#160; &#160;对于网络结构作者分析如下：（1）卷积层中的filter缺乏差异性限制了它们的识别能力。**（这句话没看懂，也没看出作者以这个论点做出什么改进，如果有人看懂这句话什么意思，求告知。）**（2）和多目标检测相比，人脸检测问题是一个二分类问题，所以它每一层可能需要更少的卷积核。**（这一句也没看懂，这个原因跟结果之间感觉没有什么联系。）**针对以上两个问题，作者减少了卷积核的个数并且把5x5的卷积核改为3x3的卷积核。上述改进使得算法获得又快又准的准确率。具体网络结构如下：
+
+![java-javascript](/img/in-post/mtcnn/cnn_arc.png)
+
+3.训练 
+
+&#160; &#160; &#160; &#160;该算法一共需要训练三个部分：一个人脸/非人脸的二分类器、一个bounding box回归器和一个人脸关键点定位回归。对是不是人脸的判别使用经典的交叉熵loss：
+
+$$ L^{det}_{i} =-\left( y^{det}_{i} log( p_{i}) +\left( 1-y^{det}_{i}\right)( 1-log( p_{i}))\right) $$
+
+&#160; &#160; &#160; &#160;对于bounding box的回归使用 Euclidean loss度量训练误差：
+
+$$ L^{box}_{i} =||\hat{y}^{box}_{i} -y^{box}_{i} ||^{2}_{2} $$
+
+&#160; &#160; &#160; &#160;脸部关键点定位同样使用Euclidean loss来度量训练误差：
+
+$$ L^{landmark}_{i} =||\hat{y}^{landmark}_{i} -y^{landmark}_{i} ||^{2}_{2} $$
+
+&#160; &#160; &#160; &#160;以上三个loss函数分别针对不同的任务，在训练阶段P-Net、R-Net和O-Net三个网络训练的目的不同，所以训练时的loss略有差别，简单来说就是不同网络训练时三个任务的loss权重不同，总的loss可以用如下公式进行定义:
+
+$$ min\sum\nolimits ^{N}_{i=1}\sum\nolimits _{j\in \{det,box,landmark\}} \alpha _{j} \beta ^{j}_{i} L^{j}_{i} $$
+
+&#160; &#160; &#160; &#160;在论文中，作者对P-Net和R-Net使用\\(\alpha _{det} =1,\alpha _{box} =0.5,\alpha _{landmark} =0.5\\),在O-Net分别设置\\(\alpha _{det} =1,\alpha _{box} =0.5,\alpha _{landmark} =1\\)增加关键点loss的权重以获得更为准确的关键点位置信息。
+
+&#160; &#160; &#160; 为了使算法在hard sample上获得更好的表现，这篇论文还增加了Online Hard sample mining。具体做法如下：在一次mini batch训练的时候选取获得loss最高的70%的样本进行反向传播，忽略剩下30%的样本。这样就提高了算法在难分样本上的检测能力，后续的实验也证明了以上结论。
+
+**参考资料**
+
+
+ 1.[Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks][1]
+
+ 
+
+
+  [1]: https://kpzhang93.github.io/MTCNN_face_detection_alignment/paper/spl.pdf
