@@ -37,6 +37,9 @@ v_{c} =\left( c_{y} -c^{y}_{a}\right) /h^{a} ,\ y_{h} =log\left( h/h^{a}\right)\
 v^{*}_{c} =\left( c^{*}_{y} -c^{a}_{y}\right) /h^{a} ,\ v^{*}_{h} =log\left( h^{*} /h^{a}\right)\\
 \end{gather*} $$
 
+&#160; &#160; &#160; &#160;上面公式中，\\(v^{*}\\)和\\(v\\)分别代表ground truth和预测值和anchor之间的相对误差，\\(c^{a}_{y}\\)和\\(h^{a}\\)分别代表anchor的中心坐标和高度。其实，上面公式跟Faster-RCNN发展起来的目标检测中要计算的相对误差是相似的，只是没有再计算相对anchor宽度的相对误差，而是变成了一个固定值，比如16pixel。
+
+&#160; &#160; &#160; &#160;
 
 
 
