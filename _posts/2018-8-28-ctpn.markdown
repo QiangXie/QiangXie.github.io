@@ -63,7 +63,7 @@ $$ \begin{equation*}
 L( s_{i} ,v_{j} ,o_{k}) =\frac{1}{N_{s}}\sum _{i} L^{cl}_{s}\left( s_{i} ,s^{*}_{i}\right) +\frac{\lambda _{1}}{N_{v}}\sum _{j} L^{re}_{v}\left( v_{j} ,v^{*}_{j}\right) +\frac{\lambda _{2}}{N_{o}}\sum _{k} L^{re}_{o}\left( o_{k} ,o^{*}_{k}\right)
 \end{equation*} $$
 
-&#160; &#160; &#160; &#160;在上面的Loss函数中，可以看到Loss主要分为三个部分，分别是衡量用于判定是否是文本的Score的误差\\( L^{cl}_{s}\\)、用于衡量y坐标误差和side-refinement误差的\\(L^{re}_{v}\\)和\\(L^{re}_{o}\\)。和通用目标检测类似，前一个Loss函数使用Softmax loss,后两个回归使用Smooth L1 loss。
+&#160; &#160; &#160; &#160;在上面的Loss函数中，可以看到Loss主要分为三个部分，分别是衡量用于判定是否是文本的Score的误差\\( L_{s}^{cl}\\)、用于衡量y坐标误差和side-refinement误差的\\(L_{v}^{re}\\)和\\(L_{o}^{re}\\)。和通用目标检测类似，前一个Loss函数使用Softmax loss,后两个回归使用Smooth L1 loss。
 
 ### 3.实验结果 ###
 
