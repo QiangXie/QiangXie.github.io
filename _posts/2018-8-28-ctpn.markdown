@@ -11,7 +11,7 @@ tags:
     
 ---
 
-## 1. 算法核心内容  ##
+### 1. 算法核心内容  ###
 
 &#160; &#160; &#160; &#160;本论文提出了一个使用CNN和LSTM的文本检测算法，CNN学习深度特征，使用LSTM学习使用文本特征序列中的有用信息用于文本检测，获得不错的检测效果。算法整体流程如下文所示：
 
@@ -55,18 +55,32 @@ o=\left( x_{side} \ -c^{x}_{a}\right) /w_{a} ,\ o^{*} =\left( x^{*}_{side} -c^{x
 
 &#160; &#160; &#160; &#160;如果小矩形\\(B_{j}\\)是\\(B_{i}\\)最近的相邻小矩形，且它们之间的距离小于50个pixel，并且它们两个竖直方向的overlap比例大于0.7，则把这两个小矩形合并成一个。对检测到的小矩形一直进行这种合并，直到无法合并为止。有一点值得注意的是，当合并到文本行最边缘的小矩形时不再以小矩形的宽度作为最边上的小矩形的边界，而是使用5中描述的side-refinement预测出的边界相对偏移值。
 
-Loss函数
+### 2.Loss函数 ###
 
+和经典的目标检测任务类似，本文提出的文本检测方法同样是一个多任务学习模型，分别需要不同的损失函数来度量模型的误差，总的Loss函数如下式：
 
+$$ \begin{equation*}
+L( s_{i} ,v_{j} ,o_{k}) =\frac{1}{N_{s}}\sum _{i} L^{cl}_{s}\left( s_{i} ,s^{*}_{i}\right) +\frac{\lambda _{1}}{N_{v}}\sum _{j} L^{re}_{v}\left( v_{j} ,v^{*}_{j}\right) +\frac{\lambda _{2}}{N_{o}}\sum _{k} L^{re}_{o}\left( o_{k} ,o^{*}_{k}\right)
+\end{equation*} $$
+
+&#160; &#160; &#160; &#160;在上面的Loss函数中，可以看到Loss主要分为三个部分，分别是衡量用于判定是否是文本的Score的误差\\( L^{cl}_{s}\\)、用于衡量y坐标误差和side-refinement误差的\\(L^{re}_{v}\\)和\\(L^{re}_{o}\\)。和通用目标检测类似，前一个Loss函数使用Softmax loss,后两个回归使用Smooth L1 loss。
+
+### 3.实验结果 ###
+
+![java-javascript](/img/in-post/paper-ctpn/result.png)
+
+&#160; &#160; &#160; &#160;本文实验结果还是相当不错的，在ICDAR2013数据集上能获得0.88的F-score，在SWT和MULITILINGUAL上分别获得0.66和0.82的F-Score，实验结果如下图。在实际应用中，虽然这个方法已经是16年放出来的方法了，我使用CTPN的代码在自己的数据集上进行训练，测试结果显示CTPN检测结果非常好，尤其是在长文本数据上进行检测时效果非常好。
+
+![java-javascript](/img/in-post/paper-ctpn/result2.png)
 
 
 
 **参考资料**
 
 
- 1.[Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks][1]
+ 1.[Detecting Text in Natural Image with Connectionist Text Proposal Network][1]
 
  
 
 
-  [1]: https://kpzhang93.github.io/MTCNN_face_detection_alignment/paper/spl.pdf
+  [1]: https://arxiv.org/pdf/1609.03605.pdf
