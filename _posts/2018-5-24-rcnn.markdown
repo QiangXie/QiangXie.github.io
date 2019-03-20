@@ -118,8 +118,11 @@ $$
 
  4.[Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks][4]
 
+ 5.[Mask R-CNN][5]
+
 
   [1]: https://arxiv.org/pdf/1311.2524.pdf
   [2]: https://arxiv.org/pdf/1406.4729.pdf
   [3]: https://arxiv.org/pdf/1504.08083.pdf
   [4]: https://arxiv.org/pdf/1506.01497.pdf
+  [5]: http://openaccess.thecvf.com/content_ICCV_2017/papers/He_Mask_R-CNN_ICCV_2017_paper.pdf
