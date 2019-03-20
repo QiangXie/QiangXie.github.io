@@ -1,6 +1,6 @@
 # Site settings
 title: Johnny's Blog 
-SEOTitle: 谢强的博客 | Johnny's Blog
+SEOTitle: 谢强的博客 | Qiang Xie's Blog
 header-img: img/home-bg.jpg
 email: happyxieqiang@qq.com 
 description: "There is no royal road to learning."
@@ -15,8 +15,7 @@ RSS: false
 weibo_username:     happyxieqiang
 zhihu_username:     xie-qiang-28-93
 github_username:    qiangxie 
-#twitter_username:  huxpro
-#facebook_username:  huxpro
+
 
 
 
