@@ -1,0 +1,104 @@
+---
+layout: post
+title: "从RCNN到Mask-RCNN"
+subtitle: "RCNN系列算法的前世今生"
+author: "Johnny"
+date: 2018-05-24 18:03:54
+header-img: "img/caffe_install.jpg"
+tags:
+    - Detection
+    - Paper Reading
+
+---
+
+#### 前言 ####
+
+&#160; &#160; &#160; &#160;在2012年的ImageNet比赛之前，目标检测算法一般是使用不同大小的窗口在图片上滑动获取可能存在感兴趣物体的区域，然后提取手工设计的特征，比如SIFT、HOG等。然后，使用分类器对提取的特征进行分类，推断出特征对应区域是否是要检测的物体。这样设计的算法存在两个问题：第一个问题是使用滑动窗需要提取的ROI（region of interest）太多了，因为需要兼顾不同的大小和宽高比；第二个问题是手工设计的特征表达能力很差。这两个问题导致目标检测算法速度慢而且性能还差。
+
+#### 人生初相见——RCNN  ###
+
+&#160; &#160; &#160; &#160;RCNN（Regions with CNN features)，作为这个系列检测算法的开山鼻祖，相比较之前的滑动窗+手工特征+分类器的检测算法有两个改进：一是使用Selective Search算法替代了滑动窗，二是使用卷积神经网络提取特征替代了使用手工设计的特征。Selective Search算法能够从图片中提取疑似存在物体的的区域，相比较滑动窗而言，Selective Search更加具有目的性，不像滑动窗法那样穷举搜索。而使用CNN特征替代手工设计的特征就无需多言了，Krizhevsky在2012年的ILSVRC上已经证明了CNN特征强大的表达能力。算法整体框架如下图：
+
+![java-javascript](/img/in-post/rcnn/rcnn.png)
+
+算法整体流程如下：
+1. 首先使用Selective Search算法在输入图片上提取2000个ROI；
+2. 对每个ROI进行warp以适应CNN的输入，输入CNN提取特征；
+3. 使用N个提前训练好的SVM对提取到的特征进行二分类，得到特征区域是否是某类物体。
+
+注：作者在R-CNN算法中使用了Boundingbox regression，但是这个regression只是为了提高roi提取过程中定位不准的问题，并不是算法的一部分，而且此时回归用的还是线性回归。
+
+#### 承上启下——SPPNet ####
+
+&#160; &#160; &#160; &#160;在介绍后续的FastRCNN算法之前，需要插入讲一个看似跟RCNN系列算法无关但是却对fast-rcnn算法具有很大启发的论文——SPP-Net。了解CNN的都知道，当CNN用作分类时，网络最后几层一般是全连接，全连接必须固定输入维度和输出维度。为了得到固定维度的特征，图片在输入CNN之前一般会进行一定的处理，比如裁剪或者缩放，如下图所示：
+
+![java-javascript](/img/in-post/rcnn/SPPNet.png)
+
+&#160; &#160; &#160; &#160;如上图所示，裁剪可能导致物体没有全部包含在输入图片里，缩放则改变了物体的宽高比，产生形变。那可不可以不尽兴裁剪和缩放呢？事实上，卷积神经网络常见的层比如卷积层和池化层完全和输入尺寸无关。完全可以对图片不进行任何处理就输入CNN网络，只要在输入全连接层之前要对之前的层输出的特征进行处理。这篇论文里，Kaiming He提出了一个叫做空间金字塔池化（Spatial Pyramid Pooling, SPP)的方法，做法见下图：
+
+![java-javascript](/img/in-post/rcnn/SPPNet2.png)
+
+&#160; &#160; &#160; &#160;由于输入图片不进行裁剪和缩放的处理，所以经过卷积和池化操作之后输出的特征图尺寸不同，为了使得输入全连接层的CNN特征维度相同，作者用SPP层替换掉了最后一层的池化层。所谓空间金字塔池化就是：把特征图池化成固定维度的特征，论文里分别是4*4、2*2和1*1，池化的格子大小使用W/n*H/n计算，W和H是特征图尺寸，n分别取1、2和3，这样无论输入图片尺寸如何，经过空间金字塔池化之后得到的特征维度都是相同的，可以输入全连接进行分类了。
+
+#### 提速——Fast-rcnn ####
+
+&#160; &#160; &#160; &#160;SPP-Net出来不久之后，Ross就放出了Fast-RCNN。（值得一提的是，这篇论文，作者只有RGB一个人，无敌是多么寂寞！）
+
+![java-javascript](/img/in-post/rcnn/faster-rcnn.png)
+
+&#160; &#160; &#160; &#160;之前的RCNN存在的缺点就是冗余计算太多，使用Selective Search提取到的ROI每一个都要过一遍CNN，即使其中一些ROI可能存在重合区域。Fast-RCNN只需要对一张图片过一次CNN网络，只是在最后阶段，使用ROI Pooling对每一个ROI提取一个固定维度的CNN特征。所谓ROI Pooling，其实就是对每一个Selective Search提取到的ROI都在特征图上投影，对投影区域进行池化。池化的时候使用SPP-Net类似的方法计算池化方格的大小，这样经过ROI Pooling池化后的特征维度就是固定的，可以用于后续的分类和边框回归。
+
+&#160; &#160; &#160; &#160;Fast-RCNN相比较RCNN另一个改进之处是增加了边框的回归纠正。在RCNN算法里，边框回归纠正还只是作为附录内容，在Fast-RCNN里已经作为一个任务的loss放到总的loss里了，总的loss函数如下：
+
+$$ L(p, u, t^{u}, v) = L_{cls}(p,u)+\lambda[u\geq1]L_{loc}(t^u, v) $$
+
+&#160; &#160; &#160; &#160;其中，其中 \\(L_{loc}\\) 是分类损失函数，\\(L_{loc}\\) 是定位损失函数，定位损失函数前面的超参数 \\(\lambda\\) 用来调节两部分loss在优化过程中的比例，此论文中设置为1。位置损失抛弃了之前在RCNN里面使用的L2 loss，使用了一个新的loss函数：
+
+$$ L_{loc(t^u, v)}=\sum_{i\in\{x,y,w,h\}} smooth_{L_{1}}(t_{i}^{v}-v_{i}) $$
+
+&#160; &#160; &#160; &#160;其中，t的定义在RCNN论文里给出，是检测目标矩形框相对于proposal出的一个roi的位置信息的相对偏移量，定义如下：
+
+$$ t_{x}=(G_{x}-P_{x})/P_{w} \\ t_{y}=(G_{y}-P_{y})/P_{h} \\ t_{w}=log(G_{w}/P_{w}) \\ t_{h}=log(G_{h}/P_{h}) $$
+
+&#160; &#160; &#160; &#160;位置函数引入了一个新的loss函数——smoothL1，它的定义和曲线如下公式和图所示：
+
+$$
+smmothL_{1}(x)=\begin{equation}
+\left\{
+  \begin{array}{lr}
+  0.5x^{2}\qquad if\left|x\right|<1 \\
+  \left|x\right|-0.5\quad otherwise
+  \end{array}
+\right.
+\end{equation}
+$$
+
+smoothL1在-1到1之间是二次曲线，论文中说smoothL1相较于L2loss对于异常数据更加鲁棒，smoothL1函数图像如下：
+
+![java-javascript](/img/in-post/rcnn/smoothL1.png)
+
+&#160; &#160; &#160; &#160;经过以上改进，Fast-RCNN回归的边框准确了许多，而且速度也得到了提升。但是，Fast-RCNN还不是一个端到端的检测算法，需要其他诸如Selective Search或者Edge Boxes提取ROI，这一过程不但费时，而且使得算法训练和使用都比较麻烦。如果能把提proposal的方法做到CNN网络里就好了，只要想得到，RBG大神就能做得到，于是，Faster-RCNN诞生了。
+
+![java-javascript](/img/in-post/rcnn/rpn.png)
+
+&#160; &#160; &#160; &#160;Faster-RCNN算法相比较于Fast-RCNN算法最大的不同是多了一个区域提名网络（Region Proposal Network, RPN)，RPN的作用是用于提名ROI区域，这个网络和Fast-RCNN公用特征提取网络。在得到backbone网络输出的特征图之后，RPN使用3\*3的卷积核在特征图上滑动卷积，在每一个3\*3的位置得到固定256维的特征，这个256-d的特征就是特征图上3\*3区域对应的感受野区域的信息。在3\*3卷积之后使用1\*1卷积对256-d的特征进行卷积得到2\*k的score（RPN对于检测物体类别不加区分，只分为有物体或者没有待检测物体）和4\*k的位置信息。这里，k代表的是所谓的k个anchor，一个anchor就是以3*3特征区域的中心点为中心，变换大小和宽高比的一个预设的矩形框，论文中选取3个大小尺度，3个宽高比，所以这里k为9。
+
+&#160; &#160; &#160; &#160;我个人的理解：RPN其实就是基于CNN的滑动窗机制，这个机制和DPM等传统的目标检测算法里面的滑动窗机制是一类东西，3\*3卷积对应于滑动窗，多个anchor其实是在变换滑动窗的大小和宽高比，论文作者其实是使用CNN巧妙地模仿了滑动窗检测算法。
+
+&#160; &#160; &#160; &#160;RPN回归出的坐标信息是物体实际位置信息和anchor的位置信息的offset的相对值。在训练过程中，（1）当一个anchor和Ground Truth之间的IOU最大，或者（2）anchor和任意一个Ground Truth之间的IOU大于0.7，就认为这个anchor位置存在物体。这里第一条准则存在的原因是因为有可能存在所有的Ground Truth和任意一个anchor之间的IOU值都不超过0.7的情况。当anchor和任何一个Ground Truth之间的IOU值小于0.3，则认为这个anchor的位置不存在物体。既不是负样本又不是负样本的anchor不影响训练过程。loss函数定义如下：
+
+$$
+L(\{p_{i}\},\{t_{i}\})=\frac{1}{N_{cls}}\sum_{i}L_{cls}(p_{i},p_{i}^{*})+\lambda\frac{1}{N_{reg}}\sum_{i}L_{reg}(t_{i},t_{i}^{*})
+$$
+
+
+
+**参考资料**
+
+
+ 1.[Detecting Text in Natural Image with Connectionist Text Proposal Network][1]
+
+
+
+
+  [1]: https://arxiv.org/pdf/1609.03605.pdf
