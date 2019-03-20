@@ -5,7 +5,7 @@ subtitle: "TensorFlow实现笔记"
 author: "Johnny"
 date: 2018-7-26 19:56:33
 header-img: "img/caffe_install.jpg"
-tags: 
+tags:
     -  OCR
 ---
 
@@ -19,6 +19,7 @@ tags:
 ![java-javascript](/img/in-post/CRNN-TensorFlow/ctc.jpg)
 
 &#160; &#160; &#160; &#160;上面说了OCR和语音识别有着一定的相似性，那是否可以用RNN+CTC的方法进行OCR呢？答案是肯定的。但是，存在一个问题，语音信息是天然的时间序列，文本不是时间序列怎么适应RNN的序列输入要求呢？解决方法是卷积神经网络。卷积神经网络本来就是为图像处理专门设计的人工神经网络结构，使用CNN提取抽象的特征，对特征沿纵向案列切分就可以构造和时间序列类似的特征序列。论文《An End-to-End Trainable Neural Network for Image-based Sequence Recognition and Its Application to Scene Text Recognition》提出了一种使用CNN提取特征构造序列并使用LSTM+CTC的模型进行文本识别，获得了相当不错的结果。
+
 
 ![java-javascript](/img/in-post/CRNN-TensorFlow/crnn.jpg)
 
@@ -46,7 +47,7 @@ tags:
     	shape=[self.num_classes],
     	dtype=tf.float32,
     	initializer=tf.constant_initializer())
-    
+
     self.logits = tf.matmul(outputs, W) + b # Reshaping back to the original shape
     shape = tf.shape(x)
     self.logits = tf.reshape(self.logits, [shape[0], -1, self.num_classes])# Time major
@@ -92,7 +93,7 @@ beam search时在每一个时间点选择beam\_width个最大的可能类别，�
 
  6.[github-ypwhs-baiduyun-deeplearning-competition][6]
 
- 
+
 
 
   [1]: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.75.6306&rep=rep1&type=pdf

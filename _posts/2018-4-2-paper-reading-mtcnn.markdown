@@ -5,12 +5,12 @@ subtitle: "一个快速准确的人脸检测算法"
 author: "Johnny"
 date: 2018-4-2 14:03:54
 header-img: "img/caffe_install.jpg"
-tags: 
-    - Face Detection 
+tags:
+    - Face Detection
     - Paper Reading
 ---
 
-## 1. 算法核心内容 ## 
+## 1. 算法核心内容 ##
 
 &#160; &#160; &#160; &#160;本论文提出了一种分步、多任务（同时预测人脸和人脸关键点）的人脸检测算法，算法的整体Pipeline如下图所示：
 
@@ -21,7 +21,7 @@ tags:
 
 ## 2.CNN网络结构 ##
 
-&#160; &#160; &#160; &#160;对于网络结构作者分析如下：（1）卷积层中的filter缺乏差异性限制了它们的识别能力。**（这句话没看懂，也没看出作者以这个论点做出什么改进，如果有人看懂这句话什么意思，求告知。）**（2）和多目标检测相比，人脸检测问题是一个二分类问题，所以它每一层可能需要更少的卷积核。**（这一句也没看懂，这个原因跟结果之间感觉没有什么联系。）**针对以上两个问题，作者减少了卷积核的个数并且把5x5的卷积核改为3x3的卷积核。上述改进使得算法获得又快又准的准确率。具体网络结构如下：
+&#160; &#160; &#160; &#160;对于网络结构作者分析如下：（1）卷积层中的filter缺乏差异性限制了它们的识别能力。**（这句话没看懂，也没看出作者以这个论点做出什么改进，如果有人看懂这句话什么意思，求告知。）**（2）和多目标检测相比，人脸检测问题是一个二分类问题，所以它每一层可能需要更少的卷积核。**（这一句也没看懂，这个原因跟结果之间感觉没有什么联系。）** 针对以上两个问题，作者减少了卷积核的个数并且把5x5的卷积核改为3x3的卷积核。上述改进使得算法获得又快又准的准确率。具体网络结构如下：
 
 ![java-javascript](/img/in-post/mtcnn/cnn_arc.png)
 
@@ -52,7 +52,7 @@ $$ min\sum\nolimits ^{N}_{i=1}\sum\nolimits _{j\in \{det,box,landmark\}} \alpha 
 
  1.[Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks][1]
 
- 
+
 
 
   [1]: https://kpzhang93.github.io/MTCNN_face_detection_alignment/paper/spl.pdf
