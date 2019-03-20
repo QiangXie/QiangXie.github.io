@@ -5,7 +5,7 @@ subtitle: "batch-normalization"
 author: "Johnny"
 date: 2017-08-07 18:47:09
 header-img: "img/caffe_install.jpg"
-tags: 
+tags:
     - Paper Reading
 ---
 
@@ -32,7 +32,7 @@ $$ \hat{x}^{(k)}=\frac{x^{(k)}-E[x^{(k)}]}{\sqrt{Var[x^{(k)}]}} $$
 
 $$ y^{(k)}=\gamma ^{(k)}\hat{x}^{(k)}+\beta ^{(k)} $$
 
-&#160; &#160; &#160; &#160;其中，\\(\gamma\\)和\\(\beta\\)分别是scale和shift两个参数。有的同学看到这个公式可能会大叫：如果这两个参数分别是\\(\sqrt{Var[x^{(k)}]}\\)和\\(E[x^{(k)}]\\),那这个公式不是又变回Normalization之前的样子了吗，那batch normalization的意义何在呢？
+&#160; &#160; &#160; &#160;其中， $\gamma$ 和\\(\beta\\)分别是scale和shift两个参数。有的同学看到这个公式可能会大叫：如果这两个参数分别是\\(\sqrt{Var[x^{(k)}]}\\)和\\(E[x^{(k)}]\\),那这个公式不是又变回Normalization之前的样子了吗，那batch normalization的意义何在呢？
 
 &#160; &#160; &#160; &#160;其实这个操作还是有意义的，问题的重点就在于\\(\gamma\\)和\\(\beta\\)不是固定的参数，在训练过程中它们会根据实际的BP过程进行变化，最终获得一个较为合适的值，既能使得隐藏层的输入满足具有0均值和单位方差的白化要求，同时又满足在激活函数的输入曲线上均匀分布，不至于只使用激活函数的线性部分导致模型表达能力下降。
 
