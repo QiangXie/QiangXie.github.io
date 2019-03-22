@@ -27,16 +27,51 @@ tags:
 
 ![java-javascript](/img/in-post/yolo/yolo1-net-architecture.png)
 
+&#160; &#160; &#160; &#160;YOLO输入图片尺寸固定到448\*448，经过多次卷积池化之后最后得到7\*7\*1024维的特征，经过两个全连接得到7\*7\*30的张量，然后对检测结果进行NMS，就可以得到检测结果。YOLO相较于RCNN系列算法快了很多，在mAP值为63.4%时全尺寸YOLO可以达到45fps。如果牺牲一些检测精度，YOLO可以达到155fps，速度是Faster-RCNN的9倍到31倍。
 
+#### The Single Shot Detector ###
 
+&#160; &#160; &#160; &#160;通过改进，YOLO获得不错的运行速度，但是相应的算法准确率大幅下降。在Pascal VOC数据集上，mAP从74.3%下降到63.4%。分析YOLO的算法细节不难看出，YOLO天生存在一些短板：YOLO把一张图片划分为S\*S个格子，所以理论上一个格子只能预测一个物体，对于论文中的网络结构来说，一个格子的感受野映射回输入的448\*448上是64\*64的区域，如果这个感受野里面有两个较小的物体，YOLO预测时已经假定一个格子里只有一个物体存在，对于多个小物体YOLO是无能为力的（论文里作者有提到这个缺点）。另外一个问题，YOLO在最后预测种类以及特征时使用的是全图特征，但是在目标检测任务时最后定位物体的边缘位置信息需要很精细的语义信息，这个时候YOLO7\*7的特征显得有些粗粒度，而且这些特征里面对于一个格子中的物体来说可能大部分都是无用的。实际试用YOLO时也可以看出，YOLO检测物体时对外接矩形框的定位并不是很准确。有没有办法兼顾速度的同时让检测准确率和定位精度也保持在一个较高的水平呢？答案是有，SSD很好地完成了这个任务。
 
+&#160; &#160; &#160; &#160;Single Shot Detector(SSD)参考了过往的目标检测算法，包括Faster-RCNN和YOLO，取其精华，去其糟粕，使得检测速度较快地同时，检测准确率也没有明显下降。SSD的核心思想也是抛弃Region Proposal方法，直接回归。**（可以这么说，在算力没有明显进步或者Region Proposal方法没有革命性地变化之前，要想检测速度快，抛弃proposal直接使用回归是不可避免的。）** YOLO已经证明，使用全图特征会降低检测的准确率，而且一个特征图划分成固定个数区域会使得算法对目标尺度变化表现非常差。针对上述问题，SSD采用了比较有针对性的解决办法：
+
++ 使用3\*3卷积核在特征图上滑动卷积，使用局部特征回归目标位置信息使得定位更加准确；
+
++ 使用不同深度卷积层的输出作为回归使用的特征图，同时使用Faster-RCNN类似的anchor机制，可以应对尺度变化的问题；
+
+![java-javascript](/img/in-post/yolo/YOLO-vs-SSD.png)
+
+&#160; &#160; &#160; &#160;上图是SSD和YOLO的网络结构对比，可以看到，SSD在VGG-16的基础上后面使用1\*1的通道卷积以及3\*3步长为2的卷积对特征图进行降维增大特征图的感受野，并使用其中6个特征图进行3\*3滑动卷积，使得同样是3\*3的卷积核但是对应的感受野不同，这样就可以兼顾不同的尺度。除了不同深度卷积层输出的特征图上3\*3卷积核区域感受野大小不同，SSD借鉴Faster-RCNN预设了多个不同大小和宽高比的预设矩形框，这使得算法对尺度变化更加敏感，对宽高比的变化处理得也更好。具体原理见下图：
+
+![java-javascript](/img/in-post/yolo/SSD-conv.png)
+
+&#160; &#160; &#160; &#160;图中狗和猫大小不同，这个可以使用不同尺度的特征图分别负责感知预测，狗的外界矩形框是一个矩形，猫的外接矩形是一个近似的正方形，这可以通过预设的不同宽高比的矩形框来解决。这样一些措施就使得SSD相较于YOLO来说对尺度的变化更加鲁棒。
+
+&#160; &#160; &#160; &#160;和Faster-RCNN中RPN的loss函数类似，SSD在最优化求解时采用的Loss函数也包含两部分，一部分是分类loss，一部分是位置损失loss：
+
+$$
+L(x,c,l,g)=\frac{1}{N}(L_{conf}(x,c)+\alpha L_{loc}(x, l,g))
+$$
+
+&#160; &#160; &#160; &#160;其中， \\(l\\) 是预测的目标的外接矩形框位置信息，\\(g\\) 是ground-truth矩形框位置信息，这里 \\(l\\) 和 \\(g\\) 也是相对偏移量，和Faster-RCNN位置损失函数使用的也是 \\(smooth_{L1}\\) ：
+
+$$
+L_{loc}(x,l,g)=\sum_{i\in Pos}^{N}\sum_{m\in\{cx,cy,w,h\}}x_{ij}^{k}smooth_{L1}(l_{i}^{m}-\hat{g}_{j}^{m}) \\
+\hat{g}_{j}^{cx}=(g_{j}^{cx}-d_{i}^{cx})/d_{i}^{w} \\ \hat{g}_{j}^{cy}=(g_{j}^{cy}-d_{i}^{cy})/d_{i}^{h}
+\\ \hat{g}_{j}^{w}=log(\frac{g_{j}^{w}}{d_{i}^{w}}) \\ \hat{g}_{j}^{h}=log(\frac{g_{j}^{h}}{d_{i}^{h}})
+$$
+&#160; &#160; &#160; &#160;分类loss函数就是softmax loss，其定义如下：
+
+$$
+L_{conf}(x,c)=-\sum_{i\in Pos}^{N}x_{i}^{p}log(\hat{c}_{i}^{p})-\sum_{i\in Neg}log(\hat{c}_{i}^{0}) \qquad where \quad \hat{c}_{i}^{p}=\frac{exp(c_{i}^{p})}{\sum_{p}exp(c_{i}^{p})}
+$$
 
 **参考资料**
 
 
  1.[You Only Look Once: Unified, Real-Time Object Detection][1]
 
- 2.[Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition][2]
+ 2.[SSD: Single Shot MultiBox Detector][2]
 
  3.[Fast R-CNN][3]
 
@@ -46,7 +81,7 @@ tags:
 
 
   [1]: https://arxiv.org/pdf/1506.02640.pdf
-  [2]: https://arxiv.org/pdf/1406.4729.pdf
+  [2]: https://arxiv.org/pdf/1512.02325.pdf
   [3]: https://arxiv.org/pdf/1504.08083.pdf
   [4]: https://arxiv.org/pdf/1506.01497.pdf
   [5]: http://openaccess.thecvf.com/content_ICCV_2017/papers/He_Mask_R-CNN_ICCV_2017_paper.pdf
