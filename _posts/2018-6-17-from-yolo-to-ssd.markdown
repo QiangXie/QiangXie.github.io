@@ -60,6 +60,7 @@ L_{loc}(x,l,g)=\sum_{i\in Pos}^{N}\sum_{m\in\{cx,cy,w,h\}}x_{ij}^{k}smooth_{L1}(
 \hat{g}_{j}^{cx}=(g_{j}^{cx}-d_{i}^{cx})/d_{i}^{w} \\ \hat{g}_{j}^{cy}=(g_{j}^{cy}-d_{i}^{cy})/d_{i}^{h}
 \\ \hat{g}_{j}^{w}=log(\frac{g_{j}^{w}}{d_{i}^{w}}) \\ \hat{g}_{j}^{h}=log(\frac{g_{j}^{h}}{d_{i}^{h}})
 $$
+
 &#160; &#160; &#160; &#160;分类loss函数就是softmax loss，其定义如下：
 
 $$
