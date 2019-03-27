@@ -67,6 +67,18 @@ $$
 L_{conf}(x,c)=-\sum_{i\in Pos}^{N}x_{i}^{p}log(\hat{c}_{i}^{p})-\sum_{i\in Neg}log(\hat{c}_{i}^{0}) \qquad where \quad \hat{c}_{i}^{p}=\frac{exp(c_{i}^{p})}{\sum_{p}exp(c_{i}^{p})}
 $$
 
+#### YOLOv2 ####
+
+&#160; &#160; &#160; &#160;前面介绍的YOLO相比较Fast-RCNN算法虽然速度提高了，但是准确率有较大的下降。为了提高检测的精度，YOLOv2进行了一系列的改进。
++ YOLO抛弃了Dropout采用Batch Normalization作为防止过拟合的手段。Batch Normalization可以提高约2%的mAP。
++ 使用更加大的输入分辨率。第一版的YOLO使用224\*224的分辨率，后面使用448\*448的输入分辨率（这个改进在第一版YOLO就已经采用了，不知为啥论文这里又提到了）。后面为了获得奇数尺寸的特征图，改成使用输入为416\*416的分辨率（YOLOv2在卷积池化时使用32的降维系数）。
++ 引入anchor机制。SSD和Fast-RCNN已经证明了使用anchor机制对于提高检测算法的性能的作用，这里YOLOv2也引入了anchor机制，作者的实验表明anchor机制引入没有提高算法的mAP，但是提高了recall，也就是说漏检减少了。
++ 使用k-means对训练数据中标注的矩形框进行聚类，对于使用几个anchor以及使用什么样尺寸的anchor具有指导意义，比人手工选择anchor的大小更具有科学意义。因为设置的anchor是为了让anchor和ground-truth里面的矩形框具有更高的IOU，所以在k-means中距离的计算时使用下述公式计算：
+
+$$
+d(box, centroid)=1-IOU(box,centroid)
+$$
+
 **参考资料**
 
 
@@ -74,7 +86,7 @@ $$
 
  2.[SSD: Single Shot MultiBox Detector][2]
 
- 3.[Fast R-CNN][3]
+ 3.[YOLO9000:Better, Faster, Stronger][3]
 
  4.[Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks][4]
 
@@ -83,6 +95,6 @@ $$
 
   [1]: https://arxiv.org/pdf/1506.02640.pdf
   [2]: https://arxiv.org/pdf/1512.02325.pdf
-  [3]: https://arxiv.org/pdf/1504.08083.pdf
+  [3]: https://arxiv.org/pdf/1612.08242.pdf
   [4]: https://arxiv.org/pdf/1506.01497.pdf
   [5]: http://openaccess.thecvf.com/content_ICCV_2017/papers/He_Mask_R-CNN_ICCV_2017_paper.pdf
