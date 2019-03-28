@@ -71,13 +71,38 @@ $$
 
 &#160; &#160; &#160; &#160;前面介绍的YOLO相比较Fast-RCNN算法虽然速度提高了，但是准确率有较大的下降。为了提高检测的精度，YOLOv2进行了一系列的改进。
 + YOLO抛弃了Dropout采用Batch Normalization作为防止过拟合的手段。Batch Normalization可以提高约2%的mAP。
-+ 使用更加大的输入分辨率。第一版的YOLO使用224\*224的分辨率，后面使用448\*448的输入分辨率（这个改进在第一版YOLO就已经采用了，不知为啥论文这里又提到了）。后面为了获得奇数尺寸的特征图，改成使用输入为416\*416的分辨率（YOLOv2在卷积池化时使用32的降维系数）。
++ 使用更加大的输入分辨率。第一版的YOLO使用224\*224的分辨率，后面使用448\*448的输入分辨率（这个改进在第一版YOLO就已经采用了，不知为啥论文这里又提到了）。后面为了获得奇数尺寸的特征图，改成使用输入为416\*416的分辨率，YOLOv2在卷积池化时使用32的降维系数，所有最后特征图的尺寸为13*13。
 + 引入anchor机制。SSD和Fast-RCNN已经证明了使用anchor机制对于提高检测算法的性能的作用，这里YOLOv2也引入了anchor机制，作者的实验表明anchor机制引入没有提高算法的mAP，但是提高了recall，也就是说漏检减少了。
 + 使用k-means对训练数据中标注的矩形框进行聚类，对于使用几个anchor以及使用什么样尺寸的anchor具有指导意义，比人手工选择anchor的大小更具有科学意义。因为设置的anchor是为了让anchor和ground-truth里面的矩形框具有更高的IOU，所以在k-means中距离的计算时使用下述公式计算：
 
 $$
 d(box, centroid)=1-IOU(box,centroid)
 $$
+
+&#160; &#160; &#160; &#160;和Faster-RCNN以及SSD的anchor不同，YOLO2在预测的时候预测的是目标外接矩形框中心店位置相对于anchor左上角顶点位置的偏移量，如下图所示：
+
+![java-javascript](/img/in-post/yolo/yolov2-anchor.png)
+
+&#160; &#160; &#160; &#160;如图中所示，YOLO分别预测 \\(t_{x},t_{y},t_{w},t_{h}\\) 这几个值， \\(\sigma\\) 是一个逻辑激活函数，把预测到的 \\(t_{x}\\) 和 \\(t_{y}\\)映射到（0,1）范围内，0表示左上角，1表示右下角。anchor左上角的位置，加上向右下侧偏移量，就是目标外接矩形框的中心位置。表示宽度和高度的位置信息依然是相对于anchor的宽度以及高度的偏移量的对数。
+
+###### Fine-Grained Feature ######
+
+&#160; &#160; &#160; &#160;SSD中使用了多个卷积层输出的特征进行卷积回归，可以兼顾不同的尺度，YOLOv2最后的特征图是13\*13,这个特征图的感受野是很大的，应对大目标还可以，但是对小目标的检测效果可能会很差，为了应对这个问题，YOLO巧妙地引入了低层次的特征。backbone网络输出的倒数第二个特征图是26\*26\*512的维度，YOLO把特征图中每一个通道上2*2的区域拆分成了4个通道，如下图所示：
+
+![java-javascript](/img/in-post/yolo/space-to-depth.png)
+
+&#160; &#160; &#160; &#160;这样，26\*26\*512的特征图就拆分成了13\*13\*2048的特征图，在进行回归时一个anchor用到的特征信息就包含了不同尺度的特征。论文中说这样做可以提高1%的performance。
+
+###### Multi-Scale Training ######
+
+&#160; &#160; &#160; &#160;论文中另一个有意思的点是使用不同尺寸的输入图片来训练YOLOv2，这样也可以增加YOLOv2对不同尺度的图片目标检测的鲁棒性。具体的做法是：因为YOLOv2网络中只包含卷积和池化层，这使得YOLOv2对于输出图片的尺寸没有要求，和其他检测算法使用固定尺寸的输入图片训练不同，YOLOv2使用不同尺度的图片训练YOLOv2。在训练过程中，每经过10个batches之后YOLOv2在 \\(\{320,352,...,608\}\\) 中随机选择一个输入尺寸进行训练。因为YOLOv2 backbone网络的下采样比例是32，所以这里的输入尺寸都是32的倍数。这样的训练方式使得YOLOv2能够在不同的输入尺寸上进行检测。
+
+&#160; &#160; &#160; &#160;YOLOv2还采用和分类网络共享权值训练的方法使得YOLO可以检测在检测数据集中没有的物体类别，这里不再过多介绍。
+
+##### YOLOv3 #####
+
+
+
 
 **参考资料**
 
@@ -88,13 +113,11 @@ $$
 
  3.[YOLO9000:Better, Faster, Stronger][3]
 
- 4.[Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks][4]
+ 4.[YOLOv3: An Incremental Improvement][4]
 
- 5.[Mask R-CNN][5]
 
 
   [1]: https://arxiv.org/pdf/1506.02640.pdf
   [2]: https://arxiv.org/pdf/1512.02325.pdf
   [3]: https://arxiv.org/pdf/1612.08242.pdf
-  [4]: https://arxiv.org/pdf/1506.01497.pdf
-  [5]: http://openaccess.thecvf.com/content_ICCV_2017/papers/He_Mask_R-CNN_ICCV_2017_paper.pdf
+  [4]: https://pjreddie.com/media/files/papers/YOLOv3.pdf
