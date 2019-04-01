@@ -1,0 +1,21 @@
+---
+layout: post
+title: "最优化方法学习"
+subtitle: "GD、SGD、Momentum、Nesterov Momentum、AdaGrad、RMSProp、Adam"
+author: "Johnny"
+date: 2016-12-22 16:00:09
+header-img: "img/algorithm.jpg"
+tags:
+    - Machine Learning
+---
+
+&#160; &#160; &#160; &#160;
+
+![java-javascript](/img/in-post/l0l1l2/l2-ball.svg)
+
+ 1.[Sparsity and Some Basics of L1 Regularization][1]
+
+ 2.[机器学习中的范数规则化之（一）L0、L1与L2范数][2]
+
+   [1]: http://freemind.pluskid.org/machine-learning/sparsity-and-some-basics-of-l1-regularization/
+   [2]: https://blog.csdn.net/zouxy09/article/details/24971995

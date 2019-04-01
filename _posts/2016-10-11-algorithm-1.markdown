@@ -5,8 +5,8 @@ subtitle: "prim算法"
 author: "Johnny"
 date: 2016-10-11 19:15:09
 header-img: "img/algorithm.png"
-tags: 
-    - 数据结构与算法
+tags:
+    - Algorithm
 ---
 
 
@@ -64,24 +64,24 @@ tags:
     #include <iostream>
     #include <vector>
     #include <algorithm>
-     
+
     using namespace std;
-    
-    
+
+
     struct line{
     	int start;
     	int end;
     	int weight;
     	bool hasIn = false;
     };
-    
+
     typedef line * ptl;
-    
+
     bool comp(ptl & a, ptl & b)
     {
     	return a->weight < b->weight;
     }
-    
+
     int main()
     {
     	int N, M;
@@ -131,4 +131,3 @@ tags:
     	cout << ans << endl;
     	return 0;
     }
-

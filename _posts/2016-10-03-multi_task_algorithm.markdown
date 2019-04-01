@@ -5,8 +5,8 @@ subtitle: "排序算法小结"
 author: "Johnny"
 date: 2016-10-04 12:15:09
 header-img: "img/algorithm.png"
-tags: 
-    - 数据结构与算法
+tags:
+    - Algorithm
 ---
 
 
@@ -123,7 +123,7 @@ tags:
     		}
     	}
     }
- 
+
 # 5.归并排序 #
 
 归并采用分而治之的思想，它递归地不断把一个数组分成两部分，然后把经过排序后的两个表合并起来。合并的时候是这样做的：数组A和B已经排好序了，我们合并开始的时候用两个指针分别指向A和B的第一个元素，如果指向A的指针所指向的元素比较小就把A放到归并后的第一个元素，A的指针往后移动一位，反之对B也是，直到把两组元素全部合并为止。代码如下：
@@ -247,9 +247,9 @@ tags:
     		QuickSort_(nums, start,i - 1 );
     		QuickSort_(nums, i + 1, end);
     	}
-    
+
     }
-    
+
     void QuickSort(vector<int> &nums)
     {
     	int counter = nums.size();
@@ -264,17 +264,17 @@ tags:
 
     #include <iostream>
     #include <vector>
-    
+
     using namespace std;
-    
+
     struct task
     {
     	int occupied_memory;
     	int storage_memory;
     };
-    
+
     typedef task* pttask;
-    
+
     void MergeSort(vector<pttask> & nums)
     {
     	if (nums.size() <= 1)
@@ -332,7 +332,7 @@ tags:
     		}
     	}
     }
-    
+
     int main()
     {
     	int task_num;
@@ -359,7 +359,6 @@ tags:
     		temp_time -= tasks[i]->occupied_memory - tasks[i]->storage_memory;
     	}
     	cout << ans << endl;
-    
+
     	return 0;
     }
-

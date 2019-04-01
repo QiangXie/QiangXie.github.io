@@ -5,8 +5,8 @@ subtitle: "caffe 中的 SGD solver"
 author: "Johnny"
 date: 2016-06-15 19:04:09
 header-img: "img/bg-4.jpg"
-tags: 
-    - caffe学习笔记
+tags:
+    - caffe
 ---
 
 
@@ -39,8 +39,8 @@ solver从最开始初始化的网络模型开始在每次迭代计算过程中�
  2. 调用backward function 计算梯度
  3. 根据所选solver类型的不同相应地根据计算得到的梯度更新网络参数
  4. 根据所选学习率、solver的类型和历史数据更新solver状态
- 
- 
+
+
 
 **2. 理论介绍**
 
@@ -49,7 +49,7 @@ solver把最优化深度神经网络当做最小化loss的过程。比如有一�
 其中，\\(f_{W}(X^{(i)})\\)是在单个数据\\(X^{(i)}\\)上的loss ,\\(r(W)\\)是以\\(\lambda\\)为权重的一个正则项。在实际应用中\\({\left | D \right |}\\)一般是一个非常大的数字，所以我们常常用一个远小于\\({\left | D \right |}\\)的数字$N$代替，每次迭代计算在数据集中随机选\\(N\\)个数据近似代替。
 \\[ L(W)\approx \frac{1}{N}\sum_{i}^{N}f_{W}(X^{(i)})+\lambda r(W) \\]
  solver在forward传播中计算\\(f_{W}\\)，在backward传播中计算梯度\\(\nabla f_{W}\\)。
- 
+
  网络参数按照不同的solver定义的不同规则，结合计算得到的error gradient \\(\nabla f_{W}\\)、正则项的梯度\\(\nabla r(W)\\)更新网络权重。
 
 **3. SGD solver**
@@ -91,4 +91,3 @@ momentum: 0.9
 1. [caffe API 文档](http://caffe.berkeleyvision.org/doxygen/classcaffe_1_1Solver.html)
 1. [Caffe Tutorial——Solver](http://caffe.berkeleyvision.org/tutorial/solver.html)
 1. [Bottou L. Stochastic gradient descent tricks[M]//Neural Networks: Tricks of the Trade. Springer Berlin Heidelberg, 2012: 421-436.](http://link.springer.com/chapter/10.1007/978-3-642-35289-8_25)
-

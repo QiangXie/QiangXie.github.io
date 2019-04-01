@@ -5,8 +5,8 @@ subtitle: "玩faster-rcnn手记"
 author: "Johnny"
 date: 2016-05-17 21:59:08
 header-img: "img/bg-3.jpg"
-tags: 
-    - 目标检测
+tags:
+    - Object Detection
 ---
 
 Faster-RCNN玩了一段时间了，一直想写一篇文章总结一下，但拖延症一直也没有下笔，今天就写了吧，做个总结。
@@ -38,126 +38,126 @@ Faster-RCNN是RCNN系列检测方法中最新的方法了（Yolo除外，因为Y
 
 
     <?xml version="1.0"?>
-    
+
     -<annotation>
-    
+
     <folder>VOC2007</folder>
-    
+
     <filename>013120.jpg</filename>
-    
-    
+
+
     -<source>
-    
+
     <database>ChongQing Database</database>
-    
+
     <annotation>ChongQing</annotation>
-    
+
     <image>flickr</image>
-    
+
     <flickrid>QiangXie</flickrid>
-    
+
     </source>
-    
-    
+
+
     -<owner>
-    
+
     <flickrid>QiangXie</flickrid>
-    
+
     <name>QiangXie</name>
-    
+
     </owner>
-    
-    
+
+
     -<size>
-    
+
     <width>1664</width>
-    
+
     <height>1200</height>
-    
+
     <depth>3</depth>
-    
+
     </size>
-    
+
     <segmented>0</segmented>
-    
-    
+
+
     -<object>
-    
+
     <name>car</name>
-    
+
     <pose>Unspecified</pose>
-    
+
     <truncated>1</truncated>
-    
+
     <difficult>0</difficult>
-    
-    
+
+
     -<bndbox>
-    
+
     <xmin>438</xmin>
-    
+
     <ymin>348</ymin>
-    
+
     <xmax>840</xmax>
-    
+
     <ymax>774</ymax>
-    
+
     </bndbox>
-    
+
     </object>
-    
-    
+
+
     -<object>
-    
+
     <name>car</name>
-    
+
     <pose>Unspecified</pose>
-    
+
     <truncated>1</truncated>
-    
+
     <difficult>0</difficult>
-    
-    
+
+
     -<bndbox>
-    
+
     <xmin>33</xmin>
-    
+
     <ymin>9</ymin>
-    
+
     <xmax>282</xmax>
-    
+
     <ymax>189</ymax>
-    
+
     </bndbox>
-    
+
     </object>
-    
-    
+
+
     -<object>
-    
+
     <name>car</name>
-    
+
     <pose>Unspecified</pose>
-    
+
     <truncated>1</truncated>
-    
+
     <difficult>0</difficult>
-    
-    
+
+
     -<bndbox>
-    
+
     <xmin>471</xmin>
-    
+
     <ymin>0</ymin>
-    
+
     <xmax>651</xmax>
-    
+
     <ymax>105</ymax>
-    
+
     </bndbox>
-    
+
     </object>
-    
+
     </annotation>
 
 
@@ -172,15 +172,15 @@ Faster-RCNN是RCNN系列检测方法中最新的方法了（Yolo除外，因为Y
     import xml.etree.ElementTree as ET
     import cv2
     import os
-    
+
     out_xml_path = "/home/qxie/Data/out/"  
     #jpg files folder
     src_path = "/home/qxie/Data/src/"
     json_file = open("./daytime_res.json",'r')
-    
-    
+
+
     counter = 0
-    
+
     while True:
     file_path = json_file.readline()
     while file_path == "\n":
@@ -199,7 +199,7 @@ Faster-RCNN是RCNN系列检测方法中最新的方法了（Yolo除外，因为Y
     im_width = im.shape[1]
     im_ch = im.shape[2]
     counter += 1
-    
+
     #create a xml
     out = ET.Element('annotation')
     #folder
@@ -218,14 +218,14 @@ Faster-RCNN是RCNN系列检测方法中最新的方法了（Yolo除外，因为Y
     image.text = "flickr"
     flickid = ET.SubElement(file_source,"flickrid")
     flickid.text = "QiangXie"
-    
+
     #file owner
     owner = ET.SubElement(out,"owner")
     flickid = ET.SubElement(owner,"flickrid")
     flickid.text = "QiangXie"
     name = ET.SubElement(owner,"name")
     name.text = "QiangXie"
-    
+
     #file size
     file_size = ET.SubElement(out,"size")
     file_width = ET.SubElement(file_size,"width")
@@ -234,20 +234,20 @@ Faster-RCNN是RCNN系列检测方法中最新的方法了（Yolo除外，因为Y
     file_height.text = str(im_width)
     file_depth = ET.SubElement(file_size,"depth")
     file_depth.text = str(im_ch)
-    
+
     #file segmented
     file_segmented = ET.SubElement(out,"segmented")
     file_segmented.text = "0"
-    
-    
-    
+
+
+
     json_data = json.loads(json_obj)
     if json_data == None:
     print "Open json obj failed"
-    
+
     if 'RecVehicles' not in json_data:
     continue
-    
+
     vehicles = json_data['RecVehicles']
     for vehicle in vehicles:
     roi = vehicle['Cutboard']
@@ -259,33 +259,33 @@ Faster-RCNN是RCNN系列检测方法中最新的方法了（Yolo除外，因为Y
     obj = ET.SubElement(out,'object')
     obj_name = ET.SubElement(obj,"name")
     obj_name.text = "car"
-    
+
     obj_pose = ET.SubElement(obj,"pose")
     obj_pose.text = "Unspecified"
-    
+
     obj_truncated = ET.SubElement(obj,"truncated")
     obj_truncated.text = "1"
-    
+
     obj_difficult = ET.SubElement(obj,"difficult")
     obj_difficult.text = "0"
-    
+
     #create boundingbox
     bndbox = ET.SubElement(obj,"bndbox")
     xmin = ET.SubElement(bndbox,'xmin')
     xmin.text = str(bbox_x)
-    
+
     ymin = ET.SubElement(bndbox,'ymin')
     ymin.text = str(bbox_y)
-    
+
     xmax = ET.SubElement(bndbox,'xmax')
     xmax.text = str(bbox_x + bbox_width)
-    
+
     ymax = ET.SubElement(bndbox,'ymax')
     ymax.text = str(bbox_y + bbox_height)
-    
+
     out_tree = ET.ElementTree(out)
     out_tree.write(out_xml_path + xml_file_name)
-    
+
     print "Process done"
 
 

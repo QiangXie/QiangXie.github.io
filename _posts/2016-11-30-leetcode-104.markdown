@@ -5,7 +5,7 @@ subtitle: "Maximum Depth of Binary Tree"
 author: "Johnny"
 date: 2016-11-30 11:12:09
 header-img: "img/algorithm.png"
-tags: 
+tags:
     - leetcode
 ---
 
@@ -50,4 +50,3 @@ The maximum depth is the number of nodes along the longest path from the root no
 	    	}
 	    }
     };
-

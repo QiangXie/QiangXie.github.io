@@ -7,6 +7,7 @@ date: 2017-08-07 18:47:09
 header-img: "img/caffe_install.jpg"
 tags:
     - Paper Reading
+    - Machine Learning
 ---
 
 &#160; &#160; &#160; &#160;一直使用的各种卷积神经网络模型一般都会使用Batch Normalization，虽然经常使用，但是我对其中的细节一直不是很清楚。最近花了点儿时间仔细看了这篇论文[《Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift》][1]和几篇相关的博客，在这里做一下总结。
