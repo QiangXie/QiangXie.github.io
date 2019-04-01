@@ -6,7 +6,7 @@ author: "谢强"
 date: 2018-12-17 14:03:54
 header-img: "img/caffe_install.jpg"
 tags:
-    - Detection
+    - Object Detection
     - Paper Reading
 
 ---
